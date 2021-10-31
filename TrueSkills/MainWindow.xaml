@@ -1,0 +1,59 @@
+﻿<Window x:Class="TrueSkills.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrueSkills" 
+        xmlns:views="clr-namespace:TrueSkills.Views"
+        mc:Ignorable="d"
+        Title="{DynamicResource tm_Title}" MouseDown="Window_MouseDown"
+        Style="{StaticResource defaultWindow}" Height="364" Width="400" WindowStyle="None" WindowStartupLocation="CenterScreen">
+
+    <Grid Background="{StaticResource BackColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <views:DefaultHeaderUC 
+            VisibilityDate="Collapsed" 
+            VisibilityStudent="Collapsed"></views:DefaultHeaderUC>
+        <UniformGrid 
+            Width="208" 
+            Height="187" 
+            Grid.Row="1" 
+            Rows="4" 
+            Columns="1" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            >
+            <TextBlock 
+                Style="{StaticResource inputTextBlock}"  
+                Text="{DynamicResource tm_LFM}"></TextBlock>
+            <TextBox 
+                MaxLength="255" 
+                Validation.ErrorTemplate="{StaticResource textBoxErrorTemplate}"
+                Style="{StaticResource defaultTextBox}"
+                Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=ParticipentModel.FullName,
+                        ValidatesOnDataErrors=true, NotifyOnValidationError=true}" Cursor="IBeam">
+            </TextBox>
+            <TextBlock 
+                Style="{StaticResource inputTextBlock}" 
+                Text="{DynamicResource tm_CodeExam}"></TextBlock>
+            <TextBox 
+                MaxLength="8"
+                Validation.ErrorTemplate="{StaticResource textBoxErrorTemplate}"
+                Style="{StaticResource defaultTextBox}"
+                Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=ParticipentModel.Exam,
+                        ValidatesOnDataErrors=true, NotifyOnValidationError=true}"></TextBox>
+
+        </UniformGrid>
+        <Button 
+            Grid.Row="2" 
+            Command="{Binding AuthorizationCommand}"
+            Content="{DynamicResource tm_AuthorizationCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            Style="{StaticResource AuthButton}">
+        </Button>
+    </Grid>
+</Window>

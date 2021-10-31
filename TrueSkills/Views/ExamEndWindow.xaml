@@ -1,0 +1,19 @@
+﻿<Window x:Class="TrueSkills.Views.ExamEndWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrueSkills.Views"
+        mc:Ignorable="d"
+        Title="{DynamicResource ee_Title}" Height="364" Width="400" WindowStartupLocation="CenterScreen"  ResizeMode="NoResize" WindowStyle="None" FontFamily="Roboto">
+    <Grid Background="{StaticResource BackColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <local:DefaultHeaderUC VisibilityDate="Collapsed"></local:DefaultHeaderUC>
+        <TextBlock Style="{StaticResource headerSetting}" Grid.Row="1" HorizontalAlignment="Center" FontSize="38" VerticalAlignment="Center" Text="{DynamicResource ee_End}"></TextBlock>
+        <Button Click="Button_Click" Grid.Row="2" Content="{DynamicResource ee_NewExam}" HorizontalAlignment="Center" Margin="0 0 0 10" VerticalAlignment="Center" Style="{StaticResource pushButton}"></Button>
+    </Grid>
+</Window>

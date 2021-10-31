@@ -1,0 +1,20 @@
+﻿<Window x:Class="TrueSkills.Views.ReconnectingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrueSkills.Views"
+        mc:Ignorable="d"
+        Title="{DynamicResource rw_Title}" Height="275" Width="570" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" FontFamily="Roboto">
+    <Grid Background="{StaticResource BackColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <local:DefaultHeaderUC VisibilityLogout="Collapsed" VisibilityStudent="Collapsed"></local:DefaultHeaderUC>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Style="{StaticResource headerSetting}" FontSize="14" Text="{DynamicResource rw_Reconnection}" Margin="5"></TextBlock>
+            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click" Width="Auto" Style="{StaticResource pushButton}"  Content="{DynamicResource rw_ReconnectionCommand}" Margin="5"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="TrueSkills.Views.VmHeaderUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrueSkills.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="145" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="VerticalSeparatorStyle" 
+       TargetType="{x:Type Separator}"
+       BasedOn="{StaticResource {x:Type Separator}}">
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <TransformGroup.Children>
+                            <TransformCollection>
+                                <RotateTransform Angle="90"/>
+                            </TransformCollection>
+                        </TransformGroup.Children>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource HeaderBackColor}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="TS" Style="{StaticResource tsTextBlock}"></TextBlock>
+        <TextBlock Grid.Column="1" Text="{DynamicResource a_DemoExam}" Style="{StaticResource demoTextBlock}"></TextBlock>
+        <Grid Margin="10 10 0 10" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Style="{DynamicResource someText}" Text="{DynamicResource df_Days}"></TextBlock>
+            <TextBlock Grid.Column="1" Style="{DynamicResource someText}" Text="{DynamicResource df_Hours}"></TextBlock>
+            <TextBlock Grid.Column="2" Style="{DynamicResource someText}" Text="{DynamicResource df_Minutes}"></TextBlock>
+            <TextBlock Grid.Column="3" Style="{DynamicResource someText}" Text="{DynamicResource df_Seconds}"></TextBlock>
+            <TextBlock Grid.Row="1" Style="{DynamicResource someTime}" Name="TbTime" Grid.ColumnSpan="4">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0}:{1}:{2}:{3}">
+                        <Binding Path="Days"></Binding>
+                        <Binding Path="Hours"></Binding>
+                        <Binding Path="Minutes"></Binding>
+                        <Binding Path="Seconds"></Binding>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </Grid>
+        <Image Style="{StaticResource defaultImage}" Name="ImgAgent" MouseDown="ImgAgent_MouseDown" Grid.Column="3" Source="/Assets/Agent.png"></Image>
+        <Image Name="ImgStudent" MouseDown="ImgStudent_MouseDown" Style="{StaticResource defaultImage}" Grid.Column="3" Grid.Row="1" Source="/Assets/Student.png"></Image>
+        <Separator Grid.Column="4" Grid.RowSpan="2" Background="White" Style="{DynamicResource VerticalSeparatorStyle}" />
+        <Button Click="Button_Click" Grid.Column="5" Style="{StaticResource whiteButton}" Grid.RowSpan="2">
+            <TextBlock Text="{DynamicResource vm_MoveAway}" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+    </Grid>
+</UserControl>
