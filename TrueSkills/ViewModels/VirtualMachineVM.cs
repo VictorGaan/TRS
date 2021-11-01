@@ -1,26 +1,18 @@
-﻿using CefSharp.Wpf;
+﻿using Microsoft.Win32;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Threading;
 using TrueSkills.APIs;
 using TrueSkills.Exceptions;
 using TrueSkills.Interfaces;
-using TrueSkills.Models;
 using TrueSkills.Views;
 namespace TrueSkills.ViewModels
 {
     public class VirtualMachineVM : ReactiveObject, IAsyncInitialization
     {
         private string _addressVm;
-        public ReactiveCommand<Unit, Unit> LoadErrorCommand { get; }
         public string AddressVm
         {
             get => _addressVm;
@@ -32,20 +24,34 @@ namespace TrueSkills.ViewModels
         public VirtualMachineVM()
         {
             Initialization = GetVM();
-            LoadErrorCommand = ReactiveCommand.CreateFromTask(LoadError);
+            NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
         }
 
+        void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        {
+            if (!e.IsAvailable)
+            {
+
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    ShowReconnectionWindow();
+                });
+
+            }
+        }
+
+        private void ShowReconnectionWindow()
+        {
+            ReconnectingWindow reconnectingWindow = new ReconnectingWindow();
+            reconnectingWindow.ShowDialog();
+            GetVM();
+        }
         public async Task GetVM()
         {
             AddressVm = null;
             await SetSize();
             await GetAddressAsync();
-        }
-
-        private async Task LoadError()
-        {
-            new ReconnectingWindow().ShowDialog();
-            await GetVM();
         }
 
         private async Task SetSize()
@@ -54,7 +60,7 @@ namespace TrueSkills.ViewModels
             if (content != null)
             {
                 SizeAPI body = new SizeAPI();
-                body.Height = content.ActualHeight;
+                body.Height = content.ActualHeight-55;
                 body.Width = content.ActualWidth;
                 try
                 {

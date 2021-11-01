@@ -251,8 +251,8 @@ namespace TrueSkills.Models
             VideoSource = Convert(bitmap);
             if (_isSendRtmp)
             {
-                //RtmpScreen();
-                //RtmpCamera();
+                RtmpScreen();
+                RtmpCamera();
             }
             _isSendRtmp = false;
         }

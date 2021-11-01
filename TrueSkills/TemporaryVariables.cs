@@ -1,5 +1,4 @@
 ﻿using Notifications.Wpf.Core;
-using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -21,17 +21,16 @@ namespace TrueSkills
 
         public App()
         {
-            //var args = Environment.GetCommandLineArgs();
+            string[] args = File.ReadAllText("Args.txt").Split('&');
             if (TemporaryVariables.IsMoreMice())
             {
-                MessageBox.Show(TemporaryVariables.GetProperty("a_Mice"),TemporaryVariables.GetProperty("a_Error"),MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show(TemporaryVariables.GetProperty("a_Mice"), TemporaryVariables.GetProperty("a_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                 Current.Shutdown();
             }
-            string[] args = new string[] { "1", @"ru-RU", @"C:\Users\gaste\source\repos\TrueSkills.Launcher\TrueSkills.Launcher\bin\Debug\netcoreapp3.1" };
             if (args.Length > 1)
             {
-                TemporaryVariables.PathXaml = args[2];
-                TemporaryVariables.EnglishName = args[1];
+                TemporaryVariables.PathXaml = args[1];
+                TemporaryVariables.EnglishName = args[0];
             }
             Exit += App_Exit;
         }

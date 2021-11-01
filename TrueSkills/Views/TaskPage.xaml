@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:TrueSkills.Views" 
-      xmlns:models="clr-namespace:TrueSkills.Models" xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+      xmlns:models="clr-namespace:TrueSkills.Models"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TaskPage">
@@ -17,7 +17,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <wpf:ChromiumWebBrowser Address="{Binding TaskModel.CurrentPdf.Address,UpdateSourceTrigger=PropertyChanged}"></wpf:ChromiumWebBrowser>
+        <local:PdfViewer PdfPath="{Binding TaskModel.CurrentPdf.Address,UpdateSourceTrigger=PropertyChanged}"></local:PdfViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Visibility="{Binding TaskModel.VisibilityListBox}">
             <Button Style="{StaticResource navButton}" Content="&lt;" Command="{Binding NavCommandDown}"></Button>
             <ListBox ItemContainerStyle="{StaticResource defaultListBoxItem}" ItemsSource="{Binding TaskModel.NavNumbers}" Name="myListBox"  SelectedIndex="{Binding TaskModel.SelectedIndex,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">

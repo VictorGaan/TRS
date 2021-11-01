@@ -50,11 +50,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Style="{DynamicResource someText}" Text="{DynamicResource df_Days}"></TextBlock>
-            <TextBlock Grid.Column="1" Style="{DynamicResource someText}" Text="{DynamicResource df_Hours}"></TextBlock>
-            <TextBlock Grid.Column="2" Style="{DynamicResource someText}" Text="{DynamicResource df_Minutes}"></TextBlock>
-            <TextBlock Grid.Column="3" Style="{DynamicResource someText}" Text="{DynamicResource df_Seconds}"></TextBlock>
-            <TextBlock Grid.Row="1" Style="{DynamicResource someTime}" Name="TbTime" Grid.ColumnSpan="4">
+            <TextBlock Margin="5 0 5 0" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Days}"></TextBlock>
+            <TextBlock Margin="5 0 5 0" Grid.Column="1" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Hours}"></TextBlock>
+            <TextBlock Margin="5 0 5 0" Grid.Column="2" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Minutes}"></TextBlock>
+            <TextBlock Margin="5 0 5 0" Grid.Column="3" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Seconds}"></TextBlock>
+            <TextBlock Margin="0 0 5 -10" Grid.Row="1" Style="{DynamicResource someTime}" Name="TbTime" Grid.ColumnSpan="4">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0}:{1}:{2}:{3}">
                         <Binding Path="Days"></Binding>

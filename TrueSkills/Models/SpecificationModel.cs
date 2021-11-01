@@ -2,6 +2,7 @@
 using ReactiveUI;
 using System;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 using System.Windows;
@@ -72,8 +73,7 @@ namespace TrueSkills.Models
 
             await Task.Run(() =>
                 {
-                    //IsFitMonitors = ServerSpecificationPc.Status.Monitors.Any(x => x.Measurement != StatusSpecification.NotFit);
-                    IsFitMonitors = true;
+                    IsFitMonitors = ServerSpecificationPc.Status.Monitors.Any(x => x.Measurement != StatusSpecification.NotFit);
                     IsEnabled = IsValidSpecification();
                     VisibilityGrid = Visibility.Visible;
                 });

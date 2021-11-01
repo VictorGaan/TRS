@@ -32,7 +32,6 @@ namespace TrueSkills.Views
             TemporaryVariables.s_frame = MainFrame;
             DataContext = new NavigationVM(this);
             TemporaryVariables.StartKiosk(new WindowInteropHelper(this).Handle);
-
         }
     }
 }
