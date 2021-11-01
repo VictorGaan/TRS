@@ -52,7 +52,7 @@
       <HintPath>..\..\..\..\.nuget\packages\audioswitcher.audioapi.coreaudio\3.0.0.1\lib\net40\AudioSwitcher.AudioApi.CoreAudio.dll</HintPath>
     </Reference>
     <Reference Include="Windows">
-      <HintPath>..\..\..\..\Desktop\PDFSlider-master\PDFSlider-master\PDFSlider\bin\Debug\Windows.winmd</HintPath>
+      <HintPath>bin\Debug\netcoreapp3.1\Windows.winmd</HintPath>
       <IsWinMDFile>true</IsWinMDFile>
     </Reference>
   </ItemGroup>

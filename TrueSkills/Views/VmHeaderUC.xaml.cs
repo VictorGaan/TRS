@@ -45,7 +45,7 @@ namespace TrueSkills.Views
             }
             else
             {
-                MessageBox.Show("Требуется авторизация!", "Title", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(TemporaryVariables.GetProperty("a_Auth"), TemporaryVariables.GetProperty("a_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -60,7 +60,7 @@ namespace TrueSkills.Views
             catch (Exception ex)
             {
 
-                MessageBox.Show(ex.Message, "Title", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, TemporaryVariables.GetProperty("a_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
