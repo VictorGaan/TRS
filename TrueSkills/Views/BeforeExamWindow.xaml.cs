@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,18 +10,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TrueSkills.APIs;
+using TrueSkills.Interfaces;
 
 namespace TrueSkills.Views
 {
     /// <summary>
     /// Логика взаимодействия для BeforeExamWindow.xaml
     /// </summary>
-    public partial class BeforeExamWindow : Window
+    public partial class BeforeExamWindow : Window, IAsyncInitialization
     {
-        public BeforeExamWindow()
+        public BeforeExamWindow(StepAPI step)
         {
             InitializeComponent();
-            TbExam.Text = TemporaryVariables.GetProperty("a_Step" + (int)TemporaryVariables.s_step);
+            TbExam.Text = TemporaryVariables.GetProperty("a_Step" + (int)step.Step);
+            Initialization = TemporaryVariables.SubscribeLoadStepAsync();
         }
+
+        public Task Initialization { get; set; }
     }
 }

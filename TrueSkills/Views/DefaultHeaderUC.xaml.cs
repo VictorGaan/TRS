@@ -46,9 +46,9 @@ namespace TrueSkills.Views
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (TemporaryVariables.s_time!=null)
+            if (TemporaryVariables.Time !=null)
             {
-                TbTime.Text = TemporaryVariables.s_time.ToString();
+                TbTime.Text = TemporaryVariables.Time.ToString();
             }
         }
 

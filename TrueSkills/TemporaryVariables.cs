@@ -22,12 +22,13 @@ namespace TrueSkills
     {
         public static ParticipentModel s_currentParticipent;
         public static Frame s_frame;
-        public static Step s_step;
-        public static TimeSpan? s_time;
+        public static TimeSpan? Time;
         private static RoomAPI.Rootobject s_rooms;
         private static NotificationManager s_manager;
         private static int s_countExpert;
         private static int s_countSupport;
+        public static bool IsAuthDevice = false;
+        public static List<string> Sources = new List<string>();
         public static NotificationManager GetManager()
         {
             if (s_manager == null)
@@ -89,45 +90,103 @@ namespace TrueSkills
             return url;
         }
 
-        public static async Task LoadDate()
+
+        public static async Task<StepAPI> GetStep()
+        {
+            return await SupportingMethods.GetWebRequest<StepAPI>(Url.s_stepUrl, true);
+        }
+
+
+        private static bool IsSome(string property)
+        {
+            return s_frame.Content.ToString().Contains(property);
+        }
+
+        public static async Task SubscribeLoadStepAsync()
         {
             if (s_currentParticipent != null)
             {
-                if (s_time == null)
+                try
                 {
-                    try
+                    var response = await GetStep();
+                    SearchBefore(response);
+                    var date = Convert.ToDateTime(response.End);
+                    var nowResponse = await SupportingMethods.GetWebRequest<NowAPI>(Url.s_nowUrl, true);
+                    var now = Convert.ToDateTime(nowResponse.Time);
+                    if (now > date)
                     {
-                        var response = await SupportingMethods.GetWebRequest<StepAPI>(Url.s_stepUrl, true);
-                        s_step = response.Step;
-                        if (s_step == Step.ExamOver)
-                        {
-                            new ExamEndWindow().Show();
-                        }
-                        else
-                        {
-                            var date = Convert.ToDateTime(response.End);
-                            var nowResponse = await SupportingMethods.GetWebRequest<NowAPI>(Url.s_nowUrl, true);
-                            var now = Convert.ToDateTime(nowResponse.Time);
-                            if (now > date)
-                            {
-                                s_time = new TimeSpan();
-                                return;
-                            }
-                            var substract = (date - now).Duration();
-                            s_time = substract;
-                        }
-
+                        Time = new TimeSpan();
                     }
-                    catch (CodeException ex)
+                    else
                     {
-                        ShowException(ex);
-                        Application.Current.Shutdown(0);
+                        var substract = (date - now).Duration();
+                        Time = substract;
                     }
+                    if (response.Step == Step.ExamHasStartedDocumentDisplayed)
+                    {
+                        if (IsAuthDevice && !IsSome("DocumentsPage"))
+                        {
+                            s_frame.Navigate(new DocumentsPage());
+                        }
+                    }
+                    else if (response.Step == Step.ExamStartTaskDisplay)
+                    {
+                        if (IsAuthDevice && !IsSome("TaskPage"))
+                        {
+                            s_frame.Navigate(new TaskPage());
+                        }
+                    }
+                    else if (response.Step == Step.ExamStartModuleUnderway)
+                    {
+                        if (IsAuthDevice && !IsSome("VMPage"))
+                        {
+                            s_frame.Navigate(new VMPage());
+                        }
+                    }
+                    else if (response.Step==Step.ExamHasStartedModuleNotStarted)
+                    {
+                        BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
+                        beforeExamWindow.ShowDialog();
+                    }
+                    else if (response.Step == Step.ExamOver)
+                    {
+                        new ExamEndWindow().Show();
+                        CloseAllWindows();
+                    }
+                }
+                catch (CodeException ex)
+                {
+                    ShowException(ex);
+                }
+            }
+            await Task.Delay(30000);
+            await SubscribeLoadStepAsync();
+        }
 
+        private static void CloseAllWindows()
+        {
+            foreach (var window in App.Current.Windows)
+            {
+                if (window.GetType()!=typeof(ExamEndWindow))
+                {
+                    (window as Window).Close();
                 }
             }
         }
 
+        private static void SearchBefore(StepAPI step)
+        {
+            if (step.Step != Step.ExamHasStartedModuleNotStarted)
+            {
+                foreach (var window in App.Current.Windows)
+                {
+                    if (window is BeforeExamWindow beforeWindow)
+                    {
+                        beforeWindow.Close();
+                    }
+                }
+            }
+        }
         public static async Task<RoomAPI.Rootobject> GetRoomsAsync()
         {
             if (s_currentParticipent == null)

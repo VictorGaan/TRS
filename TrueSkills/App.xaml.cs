@@ -22,11 +22,6 @@ namespace TrueSkills
         public App()
         {
             string[] args = File.ReadAllText("Args.txt").Split('&');
-            if (TemporaryVariables.IsMoreMice())
-            {
-                MessageBox.Show(TemporaryVariables.GetProperty("a_Mice"), TemporaryVariables.GetProperty("a_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
-                Current.Shutdown();
-            }
             if (args.Length > 1)
             {
                 TemporaryVariables.PathXaml = args[1];

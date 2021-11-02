@@ -9,10 +9,10 @@ namespace TrueSkills.Views
     /// </summary>
     public partial class DocumentsPage : Page
     {
-        public DocumentsPage(DocumentAPI.Rootobject rootObject)
+        public DocumentsPage()
         {
             InitializeComponent();
-            DataContext = new DocumentsVM(rootObject);
+            DataContext = new DocumentsVM();
         }
     }
 }

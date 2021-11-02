@@ -47,10 +47,11 @@ namespace TrueSkills.Models
                 var response = await SupportingMethods.PostWebRequest<ParticipentAPI, TokenAPI>(Url.s_authUrl, serializeObject);
                 _token = response.Token;
                 TemporaryVariables.s_currentParticipent = this;
-                await TemporaryVariables.LoadDate();
-                if (TemporaryVariables.s_step != Step.ExamOver)
+                var step = await TemporaryVariables.GetStep();
+                if (step.Step != Step.ExamOver)
                 {
                     CloseOpenWindow(sender);
+                    return;
                 }
                 CloseWindow(sender);
             }
@@ -138,13 +139,14 @@ namespace TrueSkills.Models
         }
         private void CloseWindow(object sender)
         {
-            (sender as Window).Close();
+            new ExamEndWindow().Show();
+            (sender as MainWindow).Close();
         }
 
         private void CloseOpenWindow(object sender)
         {
             new NavigationWindow().Show();
-            (sender as Window).Close();
+            (sender as MainWindow).Close();
         }
     }
 }

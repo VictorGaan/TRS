@@ -33,6 +33,7 @@ namespace TrueSkills.ViewModels
         public NavigationVM(NavigationWindow window)
         {
             _window = window;
+            Initialization = InitializationAsync();
             Content = new DefaultHeaderUC();
             _timer = new DispatcherTimer
             {
@@ -41,19 +42,46 @@ namespace TrueSkills.ViewModels
             _timer.Tick += Timer_Tick;
             _timer.Start();
             ContentRenderedCommand = ReactiveCommand.Create(ContentRendered);
-            Initialization = TemporaryVariables.SubscribeGetCountMessagesAsync();
         }
 
-        
+        private async Task InitializationAsync()
+        {
+            await TemporaryVariables.SubscribeLoadStepAsync();
+            await TemporaryVariables.SubscribeGetCountMessagesAsync();
+        }
+
+
         private void Timer_Tick(object sender, EventArgs e)
         {
-            var time = TemporaryVariables.s_time;
+            var time = TemporaryVariables.Time;
             if (time != null)
             {
-                if (time.Value.TotalSeconds != 0)
+
+                //if (time.Value.TotalSeconds <= 0)
+                //{
+                //    if (Content is VmHeaderUC vmHeader)
+                //    {
+                //        vmHeader.TbTime.Text = time.Value.ToString();
+                //    }
+                //    if (Content is DefaultHeaderUC defaultHeader)
+                //    {
+                //        defaultHeader.IsStartTimer = false;
+                //        defaultHeader.TbTime.Text = time.Value.ToString();
+                //    }
+                //    _timer.Stop();
+                //    var response = Task.Run(TemporaryVariables.GetStep).Result;
+                //    if (response.Step == Step.ExamOver)
+                //    {
+                //        ExamEndWindow examEndWindow = new ExamEndWindow();
+                //        examEndWindow.Show();
+                //        _window.Close();
+                //    }
+                //}
+               
+                if (time.Value.TotalSeconds > 0)
                 {
                     time = time.Value.Add(TimeSpan.FromSeconds(-1));
-                    TemporaryVariables.s_time = time;
+                    TemporaryVariables.Time = time;
                     if (Content is VmHeaderUC vmHeader)
                     {
                         vmHeader.TbTime.Text = time.Value.ToString();
@@ -62,15 +90,6 @@ namespace TrueSkills.ViewModels
                     {
                         defaultHeader.IsStartTimer = false;
                         defaultHeader.TbTime.Text = time.Value.ToString();
-                    }
-                }
-                else
-                {
-                    if (TemporaryVariables.s_step == Step.ExamOver || TemporaryVariables.s_step == Step.ExamStartModuleUnderway)
-                    {
-                        ExamEndWindow examEndWindow = new ExamEndWindow();
-                        examEndWindow.Show();
-                        _window.Close();
                     }
                 }
             }
@@ -99,7 +118,7 @@ namespace TrueSkills.ViewModels
         public void ContentRendered()
         {
             Page page = TemporaryVariables.s_frame.Content as Page;
-
+            TemporaryVariables.Sources.Add(TemporaryVariables.s_frame.Content.ToString());
             if (page is VMPage)
             {
                 if (Content.GetType() == typeof(VmHeaderUC))

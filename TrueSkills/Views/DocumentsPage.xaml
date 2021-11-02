@@ -17,9 +17,8 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="3" HorizontalAlignment="Right" Text="{Binding DocumentModel.CurrentPdf.Id,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         <wpf:PdfViewer PdfPath="{Binding DocumentModel.CurrentPdf.Address,UpdateSourceTrigger=PropertyChanged}"></wpf:PdfViewer>
         <CheckBox IsChecked="{Binding DocumentModel.IsChecked}" Command="{Binding CheckCommand}" Style="{StaticResource defaultCheckBox}" FontSize="18" Foreground="{StaticResource ForeColor}" Grid.Row="2" Content="{DynamicResource dp_SubmitText}"></CheckBox>
-        <TextBlock Grid.Row="3" FontSize="10" Foreground="{StaticResource ForeColor}" Text="{DynamicResource dp_Proceed}"></TextBlock>
+        <TextBlock Grid.Row="3" FontSize="14" Foreground="{StaticResource ForeColor}" Text="{DynamicResource dp_Proceed}"></TextBlock>
     </Grid>
 </Page>

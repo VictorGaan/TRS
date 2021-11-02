@@ -165,6 +165,7 @@ namespace TrueSkills.Models
             {
                 PlaybackDevices.Add(item);
             }
+
         }
 
         private WaveIn _waveIn;
@@ -206,6 +207,7 @@ namespace TrueSkills.Models
             else
             {
                 StopAudio();
+
             }
         }
 
@@ -251,8 +253,8 @@ namespace TrueSkills.Models
             VideoSource = Convert(bitmap);
             if (_isSendRtmp)
             {
-                RtmpScreen();
                 RtmpCamera();
+                RtmpScreen();
             }
             _isSendRtmp = false;
         }

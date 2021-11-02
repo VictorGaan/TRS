@@ -18,31 +18,29 @@ namespace TrueSkills.ViewModels
             get => _documentModel;
             set => this.RaiseAndSetIfChanged(ref _documentModel, value);
         }
-        public DocumentsVM(DocumentAPI.Rootobject rootObject)
+        public DocumentsVM()
         {
-            DocumentModel = new DocumentModel(rootObject);
+            DocumentModel = new DocumentModel();
             CheckCommand = ReactiveCommand.CreateFromTask(FitAndNavigateAsync);
         }
         private async Task FitAndNavigateAsync()
         {
             await DocumentModel.FitDocumentsAsync();
+            var response = await TemporaryVariables.GetStep();
             if (DocumentModel.Pdfs.Count == 0)
             {
-                if (TemporaryVariables.s_step == Step.ExamStartModuleUnderway)
+                if (response.Step == Step.ExamStartModuleUnderway)
                 {
                     TemporaryVariables.s_frame.Navigate(new VMPage());
                 }
-                else
+                if (response.Step == Step.ExamStartTaskDisplay)
                 {
-                    if (TemporaryVariables.s_step == Step.ExamStartTaskDisplay)
-                    {
-                        TemporaryVariables.s_frame.Navigate(new TaskPage());
-                    }
-                    else
-                    {
-                        BeforeExamWindow beforeExamWindow = new BeforeExamWindow();
-                        beforeExamWindow.ShowDialog();
-                    }
+                    TemporaryVariables.s_frame.Navigate(new TaskPage());
+                }
+                if (response.Step == Step.ExamHasStartedModuleNotStarted)
+                {
+                    BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
+                    beforeExamWindow.ShowDialog();
                 }
             }
         }

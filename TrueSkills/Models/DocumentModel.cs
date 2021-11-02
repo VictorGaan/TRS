@@ -42,10 +42,9 @@ namespace TrueSkills.Models
         }
         public Task Initialization { get; set; }
 
-        public DocumentModel(Rootobject rootObject)
+        public DocumentModel()
         {
             Pdfs = new List<Pdf>();
-            Rootobject = rootObject;
             Initialization = GetDocuments();
         }
 

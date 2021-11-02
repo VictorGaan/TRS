@@ -31,7 +31,8 @@ namespace TrueSkills.Views
         {
             var index = (int)((ListBoxItem)myListBox.ContainerFromElement((Button)sender)).Content;
             var context = (DataContext as TaskVM).TaskModel;
-            //context.NextDocument(index);
+            index -= 1;
+            context.NextDocument(index);
         }
     }
 }

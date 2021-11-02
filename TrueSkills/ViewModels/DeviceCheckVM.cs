@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using System.Linq;
 using System.Reactive;
+using System.Threading.Tasks;
 using TrueSkills.APIs;
 using TrueSkills.Enums;
 using TrueSkills.Models;
@@ -26,42 +27,41 @@ namespace TrueSkills.ViewModels
         public DeviceCheckVM()
         {
             _deviceCheckModel = new DeviceCheckModel();
-            ProceedCommand = ReactiveCommand.Create(Navigate);
+            ProceedCommand = ReactiveCommand.CreateFromTask(Navigate);
             StartVideoEvent = ReactiveCommand.Create(DeviceCheckModel.StartVideo);
             StartPlaybackEvent = ReactiveCommand.Create(DeviceCheckModel.ChangeOutput);
             AudioCommand = ReactiveCommand.Create(DeviceCheckModel.AudioChangeOutput);
         }
 
 
-        private void Navigate()
+        private async Task Navigate()
         {
+            var response = await TemporaryVariables.GetStep();
             if (DeviceCheckModel.Documents.Files.Any())
             {
-                if (TemporaryVariables.s_step == Step.ExamHasStartedDocumentDisplayed)
+                if (response.Step == Step.ExamHasStartedDocumentDisplayed)
                 {
-                    TemporaryVariables.s_frame.Navigate(new DocumentsPage(DeviceCheckModel.Documents));
+                    TemporaryVariables.s_frame.Navigate(new DocumentsPage());
                 }
             }
             else
             {
-                if (TemporaryVariables.s_step == Step.ExamStartModuleUnderway)
+                if (response.Step == Step.ExamStartModuleUnderway)
                 {
                     TemporaryVariables.s_frame.Navigate(new VMPage());
                 }
-                else
+                if (response.Step == Step.ExamStartTaskDisplay)
                 {
-                    if (TemporaryVariables.s_step == Step.ExamStartTaskDisplay)
-                    {
-                        TemporaryVariables.s_frame.Navigate(new TaskPage());
-                    }
-                    else
-                    {
-                        BeforeExamWindow beforeExamWindow = new BeforeExamWindow();
-                        beforeExamWindow.ShowDialog();
-                    }
+                    TemporaryVariables.s_frame.Navigate(new TaskPage());
+                }
+                if (response.Step == Step.ExamHasStartedModuleNotStarted)
+                {
+                    BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
+                    beforeExamWindow.ShowDialog();
                 }
             }
+            TemporaryVariables.IsAuthDevice = true;
         }
-
     }
+
 }

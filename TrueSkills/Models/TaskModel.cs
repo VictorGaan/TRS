@@ -52,6 +52,7 @@ namespace TrueSkills.Models
         }
         public TaskModel()
         {
+            NavNumbers = new ObservableCollection<int>();
             VisibilityListBox = Visibility.Collapsed;
             Pdfs = new ObservableCollection<Pdf>();
             Initialization = InitializationAsync();
@@ -65,7 +66,10 @@ namespace TrueSkills.Models
             {
                 Tasks = await SupportingMethods.GetWebRequest<TaskAPI.Rootobject>(Url.s_taskUrl, true);
                 await GetTasksAsync();
-                SetNumbers();
+                if (Tasks.Files.Count() > 1)
+                {
+                    SetNumbers();
+                }  
             }
             catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
         }

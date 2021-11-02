@@ -172,17 +172,17 @@ WindowSettings GetCurrentWindowSettings(HWND window) {
 	}
 
 	settings.gwl_exstyle = GetWindowLong(window, GWL_EXSTYLE);
-	settings.gwl_hinstance = GetWindowLong(window, GWL_HINSTANCE);
-	settings.gwl_hwndparent = GetWindowLong(window, GWL_HWNDPARENT);
+	settings.gwl_hinstance = GetWindowLong(window, -6);
+	settings.gwl_hwndparent = GetWindowLong(window, -8);
 	settings.gwl_id = GetWindowLong(window, GWL_ID);
 	settings.gwl_style = GetWindowLong(window, GWL_STYLE);
-	settings.gwl_userdata = GetWindowLong(window, GWL_USERDATA);
-	settings.gwl_wndproc = GetWindowLong(window, GWL_WNDPROC);
+	settings.gwl_userdata = GetWindowLong(window, -21);
+	settings.gwl_wndproc = GetWindowLong(window, -4);
 
 	//Optional Values: Only if its a Dialog Box
-	settings.dwl_dlgproc = GetWindowLong(window, DWL_DLGPROC);
-	settings.dwl_msgresult = GetWindowLong(window, DWL_MSGRESULT);
-	settings.dwl_user = GetWindowLong(window, DWL_USER);
+	settings.dwl_dlgproc = GetWindowLong(window, 4);
+	settings.dwl_msgresult = GetWindowLong(window, 0);
+	settings.dwl_user = GetWindowLong(window, 8);
 	return settings;
 }
 
@@ -203,14 +203,14 @@ BOOL ResetWindowPreferences(HWND window) {
 	ret &= SetWindowPos(window, HWND_TOP, OriginalWindowSettings.x, OriginalWindowSettings.y, OriginalWindowSettings.w, OriginalWindowSettings.h, SWP_FRAMECHANGED);
 	ret &= SetWindowLong(window, GWL_STYLE, OriginalWindowSettings.gwl_style);
 	ret &= SetWindowLong(window, GWL_EXSTYLE, OriginalWindowSettings.gwl_exstyle);
-	ret &= SetWindowLong(window, GWL_HINSTANCE, OriginalWindowSettings.gwl_hinstance);
-	ret &= SetWindowLong(window, GWL_HWNDPARENT, OriginalWindowSettings.gwl_hwndparent);
+	ret &= SetWindowLong(window, -6, OriginalWindowSettings.gwl_hinstance);
+	ret &= SetWindowLong(window, -8, OriginalWindowSettings.gwl_hwndparent);
 	ret &= SetWindowLong(window, GWL_ID, OriginalWindowSettings.gwl_id);
-	ret &= SetWindowLong(window, GWL_USERDATA, OriginalWindowSettings.gwl_userdata);
-	ret &= SetWindowLong(window, GWL_WNDPROC, OriginalWindowSettings.gwl_wndproc);
-	ret &= SetWindowLong(window, DWL_DLGPROC, OriginalWindowSettings.dwl_dlgproc);
-	ret &= SetWindowLong(window, DWL_MSGRESULT, OriginalWindowSettings.dwl_msgresult);
-	ret &= SetWindowLong(window, DWL_USER, OriginalWindowSettings.dwl_user);
+	ret &= SetWindowLong(window, -21, OriginalWindowSettings.gwl_userdata);
+	ret &= SetWindowLong(window, -4, OriginalWindowSettings.gwl_wndproc);
+	ret &= SetWindowLong(window, 4, OriginalWindowSettings.dwl_dlgproc);
+	ret &= SetWindowLong(window, 0, OriginalWindowSettings.dwl_msgresult);
+	ret &= SetWindowLong(window, 8, OriginalWindowSettings.dwl_user);
 	return ret;
 }
 
