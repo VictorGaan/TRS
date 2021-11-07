@@ -62,16 +62,19 @@ namespace TrueSkills.Models
 
         private async Task InitializationAsync()
         {
-            try
+            if (App.IsNetwork)
             {
-                Tasks = await SupportingMethods.GetWebRequest<TaskAPI.Rootobject>(Url.s_taskUrl, true);
-                await GetTasksAsync();
-                if (Tasks.Files.Count() > 1)
+                try
                 {
-                    SetNumbers();
-                }  
+                    Tasks = await SupportingMethods.GetWebRequest<TaskAPI.Rootobject>(Url.s_taskUrl, true);
+                    await GetTasksAsync();
+                    if (Tasks.Files.Count() > 1)
+                    {
+                        SetNumbers();
+                    }
+                }
+                catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
             }
-            catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
         }
 
         private void SetNumbers()
@@ -106,21 +109,24 @@ namespace TrueSkills.Models
 
         private async Task GetTasksAsync()
         {
-            TemporaryVariables.ClearTemp();
-            foreach (var item in Tasks.Files)
+            if (App.IsNetwork)
             {
-                try
+                TemporaryVariables.ClearTemp();
+                foreach (var item in Tasks.Files)
                 {
-                    SupportingMethods.GetFileWebRequest(item.Url, Url.s_documentUrl, true);
-                    Pdfs.Add(new Pdf() { Address = Path.GetTempPath() + $"TrueSkills\\{item.Url}.pdf", Id = item.Url });
-                }
-                catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
+                    try
+                    {
+                        SupportingMethods.GetFileWebRequest(item.Url, Url.s_documentUrl, true);
+                        Pdfs.Add(new Pdf() { Address = Path.GetTempPath() + $"TrueSkills\\{item.Url}.pdf", Id = item.Url });
+                    }
+                    catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
 
-            }
-            await Task.Delay(1000);
-            if (Pdfs.Any())
-            {
-                CurrentPdf = Pdfs[SelectedIndex];
+                }
+                await Task.Delay(1000);
+                if (Pdfs.Any())
+                {
+                    CurrentPdf = Pdfs[SelectedIndex];
+                }
             }
         }
     }

@@ -34,33 +34,39 @@ namespace TrueSkills.Models
 
         public async Task GetMessagesAsync(Room room)
         {
-            var url = await TemporaryVariables.GetUrlAsync(room, Operation.Get);
-            try
+            if (App.IsNetwork)
             {
-                var response = await SupportingMethods.PostWebRequest<Rootobject>(url, true);
-                Messages = response.Messages;
-                await Task.Delay(5000);
-                await GetMessagesAsync(room);
-            }
-            catch (CodeException ex)
-            {
-                TemporaryVariables.ShowException(ex);
+                var url = await TemporaryVariables.GetUrlAsync(room, Operation.Get);
+                try
+                {
+                    var response = await SupportingMethods.PostWebRequest<Rootobject>(url, true);
+                    Messages = response.Messages;
+                    await Task.Delay(5000);
+                    await GetMessagesAsync(room);
+                }
+                catch (CodeException ex)
+                {
+                    TemporaryVariables.ShowException(ex);
+                }
             }
         }
 
         public async Task SendMessageAsync(Room room)
         {
-            var url = await TemporaryVariables.GetUrlAsync(room, Operation.Send);
-            var request = new { text = Message };
-            try
+            if (App.IsNetwork)
             {
-                await SupportingMethods.PostWebRequest(url, request, true);
+                var url = await TemporaryVariables.GetUrlAsync(room, Operation.Send);
+                var request = new { text = Message };
+                try
+                {
+                    await SupportingMethods.PostWebRequest(url, request, true);
+                }
+                catch (CodeException ex)
+                {
+                    TemporaryVariables.ShowException(ex);
+                }
+                Message = string.Empty;
             }
-            catch (CodeException ex)
-            {
-                TemporaryVariables.ShowException(ex);
-            }
-            Message = string.Empty;
         }
     }
 }

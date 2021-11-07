@@ -23,6 +23,7 @@ namespace TrueSkills.ViewModels
         public ReactiveCommand<Unit, Unit> StartVideoEvent { get; }
         public ReactiveCommand<Unit, Unit> StartPlaybackEvent { get; }
         public ReactiveCommand<Unit, Unit> AudioCommand { get; }
+        public ReactiveCommand<Unit, Unit> ValueChangedCommand { get; }
 
         public DeviceCheckVM()
         {
@@ -31,6 +32,7 @@ namespace TrueSkills.ViewModels
             StartVideoEvent = ReactiveCommand.Create(DeviceCheckModel.StartVideo);
             StartPlaybackEvent = ReactiveCommand.Create(DeviceCheckModel.ChangeOutput);
             AudioCommand = ReactiveCommand.Create(DeviceCheckModel.AudioChangeOutput);
+            ValueChangedCommand = ReactiveCommand.Create(DeviceCheckModel.ChangeVolume);
         }
 
 

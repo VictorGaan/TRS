@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using ReactiveUI;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows;
 using TrueSkills.APIs;
@@ -16,12 +18,9 @@ namespace TrueSkills.Models
     public class SpecificationModel : ReactiveObject, IAsyncInitialization
     {
         #region Requests
-        private const string DESKTOP_MONITOR_QUERY = "SELECT * FROM Win32_DesktopMonitor";
         private const string PROCESSOR_QUERY = "SELECT * FROM Win32_Processor";
         private const string NETWORK_ADAPTER_QUERY = "SELECT * FROM Win32_NetworkAdapter";
         private const string COMPUTER_SYSTEM_QUERY = "SELECT * FROM Win32_ComputerSystem";
-        private const string KEYBOARD_QUERY = "SELECT * FROM Win32_Keyboard";
-        private const string MOUSE_QUERY = "SELECT * FROM Win32_PointingDevice";
         #endregion
         private bool _isEnabled;
         private bool _isFitMonitors;
@@ -35,6 +34,7 @@ namespace TrueSkills.Models
             _specificationPc = new SpecificationPcAPI.Rootobject();
             _serverSpecificationPCDto = new ServerSpecificationPcAPI.Rootobject();
             Initialization = InitializationAsync();
+            Task.Run(() => SubscribeGetMonitorsAsync());
         }
         public bool IsFitMonitors
         {
@@ -68,9 +68,7 @@ namespace TrueSkills.Models
         private async Task InitializationAsync()
         {
             await GetParamsAsync();
-
             await SendSpecificationAsync();
-
             await Task.Run(() =>
                 {
                     IsFitMonitors = ServerSpecificationPc.Status.Monitors.Any(x => x.Measurement != StatusSpecification.NotFit);
@@ -81,12 +79,15 @@ namespace TrueSkills.Models
 
         private async Task SendSpecificationAsync()
         {
-            try
+            if (App.IsNetwork)
             {
-                var response = await SupportingMethods.PostWebRequest<SpecificationPcAPI.Rootobject, ServerSpecificationPcAPI.Rootobject>(Url.s_specificationUrl, SpecificationPc, true);
-                ServerSpecificationPc = response;
+                try
+                {
+                    var response = await SupportingMethods.PostWebRequest<SpecificationPcAPI.Rootobject, ServerSpecificationPcAPI.Rootobject>(Url.s_specificationUrl, SpecificationPc, true);
+                    ServerSpecificationPc = response;
+                }
+                catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
             }
-            catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
         }
         private bool IsValidSpecification()
         {
@@ -154,11 +155,31 @@ namespace TrueSkills.Models
                 }
             });
         }
+        private int GetCountMonitors() => System.Windows.Forms.Screen.AllScreens.Count();
+        private bool _isNewMonitor;
+
+        private async Task SubscribeGetMonitorsAsync()
+        {
+            if (SpecificationPc.Monitors.Count != 0)
+            {
+                if (GetCountMonitors() != SpecificationPc.Monitors.Count)
+                {
+                    _isNewMonitor = true;
+                }
+            }
+            if (_isNewMonitor)
+            {
+                await Task.Run(() => InitializationAsync());
+            }
+            await Task.Delay(5000);
+            await GetMonitorsAsync();
+        }
 
         private async Task GetMonitorsAsync()
         {
             await Task.Run(() =>
             {
+                SpecificationPc.Monitors.Clear();
                 int value = 1;
                 foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                 {

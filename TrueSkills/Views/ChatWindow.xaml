@@ -52,7 +52,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox MaxLength="255" VerticalContentAlignment="Center" MaxHeight="80" Text="{Binding  UpdateSourceTrigger=PropertyChanged,Path=ChatModel.Message}" Background="{StaticResource BackColor}" FontSize="16" Foreground="{StaticResource ForeColor}" BorderBrush="{StaticResource ForeColor}" BorderThickness="1" Margin="5" TextWrapping="Wrap" materialDesign:HintAssist.Foreground="{StaticResource ForeColor}" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.Hint="Текст сообщения...">
+                <TextBox MaxLength="255" VerticalContentAlignment="Center" MaxHeight="80" Text="{Binding  Path=ChatModel.Message,UpdateSourceTrigger=PropertyChanged}" Background="{StaticResource BackColor}" FontSize="16" Foreground="{StaticResource ForeColor}" BorderBrush="{StaticResource ForeColor}" BorderThickness="1" Margin="5" TextWrapping="Wrap">
                     <TextBox.Style>
                         <Style TargetType="TextBox">
                             <Style.Resources>

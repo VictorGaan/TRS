@@ -15,6 +15,7 @@ namespace TrueSkills.Models
     public class DocumentModel : ReactiveObject
     {
         private bool _isChecked;
+        private bool _isEnabled;
         private List<Pdf> _pdfs;
         private Pdf _currentPdf;
         private Rootobject _rootobject;
@@ -22,6 +23,12 @@ namespace TrueSkills.Models
         {
             get => _isChecked;
             set => this.RaiseAndSetIfChanged(ref _isChecked, value);
+        }
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
         }
 
         public List<Pdf> Pdfs
@@ -44,57 +51,68 @@ namespace TrueSkills.Models
 
         public DocumentModel()
         {
+            IsEnabled = false;
             Pdfs = new List<Pdf>();
             Initialization = GetDocuments();
         }
 
         public async Task FitDocumentsAsync()
         {
-            if (IsChecked)
+            if (App.IsNetwork)
             {
-                try
+                if (IsChecked)
                 {
-                    var serializeObject = new FitDocumentAPI() { IsStatus = true, Id = Convert.ToInt32(CurrentPdf.Id) };
-                    await SupportingMethods.PostWebRequest<FitDocumentAPI, StatusDocumentAPI>(Url.s_documentUrl + $"/{CurrentPdf.Id}", serializeObject, true);
-                    if (Pdfs.Count > 0)
+                    try
                     {
-                        Pdfs.Remove(CurrentPdf);
-                        if (Pdfs.Count != 0)
+                        var serializeObject = new FitDocumentAPI() { IsStatus = true, Id = Convert.ToInt32(CurrentPdf.Id) };
+                        await SupportingMethods.PostWebRequest<FitDocumentAPI, StatusDocumentAPI>(Url.s_documentUrl + $"/{CurrentPdf.Id}", serializeObject, true);
+                        if (Pdfs.Count > 0)
                         {
-                            CurrentPdf = null;
-                            CurrentPdf = Pdfs[0];
+                            Pdfs.Remove(CurrentPdf);
+                            if (Pdfs.Count != 0)
+                            {
+                                CurrentPdf = null;
+                                CurrentPdf = Pdfs[0];
+                            }
                         }
+                        IsChecked = false;
                     }
-                    IsChecked = false;
-                }
-                catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
+                    catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
 
+                }
             }
         }
         public async Task GetDocuments()
         {
-            Rootobject = await SupportingMethods.GetWebRequest<Rootobject>(Url.s_documentUrl, true);
-            if (Rootobject.Files.Any())
+            if (App.IsNetwork)
             {
-                await GetFileAsync();
+                Rootobject = await SupportingMethods.GetWebRequest<Rootobject>(Url.s_documentUrl, true);
+                if (Rootobject.Files.Any())
+                {
+                    await GetFileAsync();
+                }
             }
         }
         private async Task GetFileAsync()
         {
-            TemporaryVariables.ClearTemp();
-            foreach (var item in Rootobject.Files)
+            if (App.IsNetwork)
             {
-                try
+                TemporaryVariables.ClearTemp();
+                foreach (var item in Rootobject.Files)
                 {
-                    SupportingMethods.GetFileWebRequest(item.Url, Url.s_documentUrl, true);
-                    Pdfs.Add(new Pdf() { Address = Path.GetTempPath() + $"TrueSkills\\{item.Url}.pdf", Id = item.Id });
+                    try
+                    {
+                        SupportingMethods.GetFileWebRequest(item.Url, Url.s_documentUrl, true);
+                        Pdfs.Add(new Pdf() { Address = Path.GetTempPath() + $"TrueSkills\\{item.Url}.pdf", Id = item.Id });
+                    }
+                    catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
                 }
-                catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
-            }
-            await Task.Delay(1000);
-            if (Pdfs.Any())
-            {
-                CurrentPdf = Pdfs[0];
+                await Task.Delay(1000);
+                if (Pdfs.Any())
+                {
+                    CurrentPdf = Pdfs[0];
+                }
+                IsEnabled = true;
             }
         }
     }

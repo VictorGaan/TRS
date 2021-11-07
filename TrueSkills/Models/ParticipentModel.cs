@@ -41,23 +41,31 @@ namespace TrueSkills.Models
 
         public async Task LoginAsync(object sender)
         {
-            var serializeObject = new ParticipentAPI() { FullName = FullName, Exam = Exam };
-            try
+            if (App.IsNetwork)
             {
-                var response = await SupportingMethods.PostWebRequest<ParticipentAPI, TokenAPI>(Url.s_authUrl, serializeObject);
-                _token = response.Token;
-                TemporaryVariables.s_currentParticipent = this;
-                var step = await TemporaryVariables.GetStep();
-                if (step.Step != Step.ExamOver)
+                var serializeObject = new ParticipentAPI() { FullName = FullName, Exam = Exam };
+                try
                 {
-                    CloseOpenWindow(sender);
-                    return;
+                    var response = await SupportingMethods.PostWebRequest<ParticipentAPI, TokenAPI>(Url.s_authUrl, serializeObject);
+                    _token = response.Token;
+                    TemporaryVariables.s_currentParticipent = this;
+                    await TemporaryVariables.GetStream();
+                    var step = await TemporaryVariables.GetStep();
+                    if (step.Step != Step.ExamOver)
+                    {
+                        CloseOpenWindow(sender);
+                        return;
+                    }
+                    CloseWindow(sender);
                 }
-                CloseWindow(sender);
+                catch (CodeException ex)
+                {
+                    TemporaryVariables.ShowException(ex);
+                }
             }
-            catch (CodeException ex)
+            else
             {
-                TemporaryVariables.ShowException(ex);
+                TemporaryVariables.NotNetwork();
             }
         }
 
@@ -86,14 +94,11 @@ namespace TrueSkills.Models
                             error = $"{TemporaryVariables.GetProperty("tm_NumberError")}";
                         }
 
-                        if (FullName.IndexOfAny(new char[] { ' ', '-' }) == -1)
+                        if (FullName.Where(x=>!IsBasicLetterFn(x)&&!IsBasicLetterFnRus(x)).Any())
                         {
                             error = $"{TemporaryVariables.GetProperty("tm_PunctuationError")}";
                         }
                     }
-
-
-
 
                     if ((FullName.Length < 5) || (FullName.Length > 255))
                     {
@@ -129,14 +134,25 @@ namespace TrueSkills.Models
                     }
                     break;
             }
-            
+
             return error;
+        }
+
+        private bool IsBasicLetterFnRus(char c)
+        {
+            return (c >= 'а' && c <= 'я') || (c >= 'А' && c <= 'Я') || c == ' ' || c == '-';
+        }
+
+        private bool IsBasicLetterFn(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ' || c == '-';
         }
 
         private bool IsBasicLetter(char c)
         {
             return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
+
         private void CloseWindow(object sender)
         {
             new ExamEndWindow().Show();

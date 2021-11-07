@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using TrueSkills.Interfaces;
 using System.Diagnostics;
 using System.Threading;
+using System.Net.NetworkInformation;
+using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace TrueSkills
 {
@@ -19,6 +22,7 @@ namespace TrueSkills
     public partial class App : Application
     {
 
+        public static bool IsNetwork;
         public App()
         {
             string[] args = File.ReadAllText("Args.txt").Split('&');
@@ -27,10 +31,15 @@ namespace TrueSkills
                 TemporaryVariables.PathXaml = args[1];
                 TemporaryVariables.EnglishName = args[0];
             }
+            IsNetwork = NetworkInterface.GetIsNetworkAvailable();
+            NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             Exit += App_Exit;
         }
-        
 
+        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        {
+            IsNetwork = e.IsAvailable;
+        }
         private void App_Exit(object sender, ExitEventArgs e)
         {
             TemporaryVariables.Exit();

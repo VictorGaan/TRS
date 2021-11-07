@@ -33,39 +33,52 @@
             </b:Interaction.Triggers>
         </ComboBox>
         <ComboBox SelectedItem="{Binding DeviceCheckModel.SelectedMicrophone}" ItemsSource="{Binding DeviceCheckModel.SoundSources}" DisplayMemberPath="ProductName" materialDesign:HintAssist.Hint="{DynamicResource dc_MicrophoneHint}" Style="{StaticResource defaultComboBox}" Grid.Row="1" Grid.Column="1"></ComboBox>
-        <StackPanel Margin="10 10 10 10" Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
-            <ComboBox ItemsSource="{Binding DeviceCheckModel.PlaybackDevices}" DisplayMemberPath="FullName" SelectedItem="{Binding DeviceCheckModel.SelectedAudioDevice}" Margin="0" materialDesign:HintAssist.Hint="{DynamicResource dc_OutputSoundHint}" Style="{StaticResource defaultComboBox}">
-                <b:Interaction.Triggers>
-                    <b:EventTrigger EventName="SelectionChanged">
-                        <b:InvokeCommandAction Command="{Binding StartPlaybackEvent}"></b:InvokeCommandAction>
-                    </b:EventTrigger>
-                </b:Interaction.Triggers>
-            </ComboBox>
-            <Button Margin="20 0 0 0" Background="{StaticResource ForeColor}" Height="20" Width="20" Command="{Binding AudioCommand}">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Style.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="25"></Setter>
-                            </Style>
-                        </Style.Resources>
-                    </Style>
-                </Button.Style>
-                <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White">
-                    <materialDesign:PackIcon.Style>
-                        <Style TargetType="materialDesign:PackIcon">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DeviceCheckModel.StartSound}" Value="True">
-                                    <Setter Property="Kind" Value="Play"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding DeviceCheckModel.StartSound}" Value="False">
-                                    <Setter Property="Kind" Value="Stop"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
+        <StackPanel Margin="10 10 10 10" Orientation="Vertical" Grid.Row="1" Grid.Column="2">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox ItemsSource="{Binding DeviceCheckModel.PlaybackDevices}" DisplayMemberPath="FullName" SelectedItem="{Binding DeviceCheckModel.SelectedAudioDevice}" Margin="0" materialDesign:HintAssist.Hint="{DynamicResource dc_OutputSoundHint}" Style="{StaticResource defaultComboBox}">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="SelectionChanged">
+                            <b:InvokeCommandAction Command="{Binding StartPlaybackEvent}"></b:InvokeCommandAction>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </ComboBox>
+                <Button Margin="20 0 0 0" Background="{StaticResource ForeColor}" Height="20" Width="20" Command="{Binding AudioCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="25"></Setter>
+                                </Style>
+                            </Style.Resources>
                         </Style>
-                    </materialDesign:PackIcon.Style>
-                </materialDesign:PackIcon>
-            </Button>
+                    </Button.Style>
+                    <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White">
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DeviceCheckModel.StartSound}" Value="True">
+                                        <Setter Property="Kind" Value="Play"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding DeviceCheckModel.StartSound}" Value="False">
+                                        <Setter Property="Kind" Value="Stop"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding DeviceCheckModel.VolumeVisibility}">
+                <materialDesign:PackIcon Margin="0 10 10 10"  Kind="VolumeHigh" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource ForeColor}"></materialDesign:PackIcon>
+                <Slider Margin="10" Width="200" Maximum="100" Foreground="{StaticResource ForeColor}" Minimum="0" Value="{Binding DeviceCheckModel.Volume}">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="ValueChanged">
+                            <b:InvokeCommandAction Command="{Binding ValueChangedCommand}"></b:InvokeCommandAction>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </Slider>
+                <TextBlock Margin="10" Style="{StaticResource deviceTextBlock}" Text="{Binding DeviceCheckModel.Volume,StringFormat=F0}"></TextBlock>
+            </StackPanel>
         </StackPanel>
         <Image Margin="10" Source="{Binding DeviceCheckModel.VideoSource}" Grid.ColumnSpan="3" Grid.Row="2"></Image>
         <Button IsEnabled="{Binding DeviceCheckModel.IsEnabled}" Grid.Row="3" Style="{StaticResource pushButton}" Margin="10" Grid.ColumnSpan="3" Cursor="Hand" Command="{Binding ProceedCommand}" Content="{DynamicResource a_Proceed}"></Button>

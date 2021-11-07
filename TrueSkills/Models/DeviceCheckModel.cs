@@ -28,19 +28,8 @@ namespace TrueSkills.Models
 {
     public class DeviceCheckModel : ReactiveObject, IAsyncInitialization
     {
-        [DllImport("user32.dll")]
-        public static extern int GetSystemMetrics(int index);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetDC(IntPtr hWnd);
-
-        [DllImport("gdi32.dll")]
-        private static extern bool BitBlt([In] IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, [In] IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop);
-
-        [DllImport("user32.dll")]
-        private static extern bool ReleaseDC(IntPtr hWnd, IntPtr hdc);
-
-
+        private double _volume;
+        private Visibility _volumeVisibility;
         private FilterInfoCollection _videoDevices;
         private bool _startSound;
         private VideoCaptureDevice _videoSource;
@@ -52,25 +41,31 @@ namespace TrueSkills.Models
         private FilterInfo _selectedWebcam;
         private ObservableCollection<CoreAudioDevice> _playbackDevices;
         private CoreAudioDevice _selectedAudioDevice;
-        private StreamAPI _stream;
         private bool _isEnabled;
+        public double Volume
+        {
+            get => _volume;
+            set => this.RaiseAndSetIfChanged(ref _volume, value);
+        }
+        public Visibility VolumeVisibility
+        {
+            get => _volumeVisibility;
+            set => this.RaiseAndSetIfChanged(ref _volumeVisibility, value);
+        }
         public bool IsEnabled
         {
             get => _isEnabled;
             set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
-        }
-        public StreamAPI Stream
-        {
-            get => _stream;
-            set => this.RaiseAndSetIfChanged(ref _stream, value);
         }
         public CoreAudioDevice SelectedAudioDevice
         {
             get => _selectedAudioDevice;
             set
             {
-                this.RaiseAndSetIfChanged(ref _selectedAudioDevice, value);     
+                VolumeVisibility = value != null ? Visibility.Visible : Visibility.Collapsed;
+                this.RaiseAndSetIfChanged(ref _selectedAudioDevice, value);
                 IsEnabled = IsSuccessfulCheck();
+
             }
         }
         public ObservableCollection<CoreAudioDevice> PlaybackDevices
@@ -84,7 +79,7 @@ namespace TrueSkills.Models
             get => _selectedWebcam;
             set
             {
-                this.RaiseAndSetIfChanged(ref _selectedWebcam, value); 
+                this.RaiseAndSetIfChanged(ref _selectedWebcam, value);
                 IsEnabled = IsSuccessfulCheck();
             }
         }
@@ -136,25 +131,40 @@ namespace TrueSkills.Models
 
         public DeviceCheckModel()
         {
+            VolumeVisibility = Visibility.Collapsed;
             StartSound = true;
             SoundSources = new ObservableCollection<WaveInCapabilities>();
             PlaybackDevices = new ObservableCollection<CoreAudioDevice>();
-
             Initialization = InitializationAsync();
+        }
+
+        public void ChangeVolume()
+        {
+            try
+            {
+                AudioManager.SetMasterVolume((float)Volume);
+            }
+            catch
+            {
+
+                return;
+            }
         }
 
         private async Task InitializationAsync()
         {
-            try
+            if (App.IsNetwork)
             {
-                Stream = await SupportingMethods.GetWebRequest<StreamAPI>(Url.s_streamUrl, true);
-                Documents = await SupportingMethods.GetWebRequest<Rootobject>(Url.s_documentUrl, true);
-            }
-            catch (CodeException ex)
-            {
-                TemporaryVariables.ShowException(ex);
-            }
+                try
+                {
+                    Documents = await SupportingMethods.GetWebRequest<Rootobject>(Url.s_documentUrl, true);
+                }
+                catch (CodeException ex)
+                {
 
+                    TemporaryVariables.ShowException(ex);
+                }
+            }
             FilterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             for (int i = 0; i < WaveIn.DeviceCount; i++)
             {
@@ -165,7 +175,6 @@ namespace TrueSkills.Models
             {
                 PlaybackDevices.Add(item);
             }
-
         }
 
         private WaveIn _waveIn;
@@ -191,7 +200,17 @@ namespace TrueSkills.Models
             foreach (CoreAudioDevice d in PlaybackDevices)
             {
                 if (d.FullName == SelectedAudioDevice.FullName)
+                {
+                    if (d.Volume < 0)
+                    {
+                        Volume = 0;
+                    }
+                    else
+                    {
+                        Volume = d.Volume;
+                    }
                     d.SetAsDefault();
+                }
             }
         }
 
@@ -240,7 +259,7 @@ namespace TrueSkills.Models
 
         public bool IsSuccessfulCheck()
         {
-           return SelectedAudioDevice != null && SelectedMicrophone.ProductName != null && SelectedWebcam != null;
+            return SelectedAudioDevice != null && SelectedMicrophone.ProductName != null && SelectedWebcam != null;
         }
 
 
@@ -249,17 +268,18 @@ namespace TrueSkills.Models
         private void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
-            _videoFrame = bitmap;
+            TemporaryVariables.VideoFrame = bitmap;
             VideoSource = Convert(bitmap);
-            if (_isSendRtmp)
+            if (TemporaryVariables.GetStream() != null)
             {
-                RtmpCamera();
-                RtmpScreen();
+                if (_isSendRtmp && TemporaryVariables.GetStream().Result.Camera != null)
+                {
+                    SupportingMethods.RtmpCamera(TemporaryVariables.GetStream().Result.Camera);
+                }
             }
             _isSendRtmp = false;
         }
 
-        private Bitmap _videoFrame;
         private BitmapImage Convert(Bitmap src)
         {
             MemoryStream ms = new MemoryStream();
@@ -272,112 +292,6 @@ namespace TrueSkills.Models
             image.EndInit();
             image.Freeze();
             return image;
-        }
-
-        private void RtmpScreen()
-        {
-            var pushUrl = Stream.Screen;
-            if (pushUrl == null || pushUrl == string.Empty) return;
-
-            var frameRate = 15;
-            var waitInterval = 1000 / frameRate;
-
-
-            var screenWidth = GetSystemMetrics(0);
-            var screenHeight = GetSystemMetrics(1);
-
-            var width = screenWidth;
-            var height = screenHeight;
-
-            var pusher = new Pusher();
-            pusher.StartPush(pushUrl, width, height, frameRate);
-
-            var stopEvent = new ManualResetEvent(false);
-            var thread = new Thread(() =>
-            {
-                var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
-                encoder.FrameEncoded += (sender, e) =>
-                {
-                    var packet = e.Packet;
-                    pusher.PushPacket(packet);
-                };
-                var screenDc = GetDC(IntPtr.Zero);
-                var bitmap = new Bitmap(screenWidth, screenHeight);
-                try
-                {
-                    while (!stopEvent.WaitOne(1))
-                    {
-                        var start = Environment.TickCount;
-                        using (var graphic = Graphics.FromImage(bitmap))
-                        {
-                            var imageDc = graphic.GetHdc();
-                            BitBlt(imageDc, 0, 0, width, height, screenDc, 0, 0, 0x00CC0020);
-                        }
-                        encoder.AddImage(bitmap);
-                        var timeUsed = Environment.TickCount - start;
-                        var timeToWait = waitInterval - timeUsed;
-                        Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
-                    }
-                    encoder.Flush();
-                }
-                finally
-                {
-                    encoder.Dispose();
-                    bitmap.Dispose();
-                    ReleaseDC(IntPtr.Zero, screenDc);
-                }
-            });
-            thread.Start();
-
-        }
-        private void RtmpCamera()
-        {
-            var pushUrl = Stream.Camera;
-            if (pushUrl == null || pushUrl == string.Empty) return;
-
-            var frameRate = 15;
-            var waitInterval = 1000 / frameRate;
-
-
-            var screenWidth = GetSystemMetrics(0);
-            var screenHeight = GetSystemMetrics(1);
-
-            var width = screenWidth;
-            var height = screenHeight;
-
-            var pusher = new Pusher();
-            pusher.StartPush(pushUrl, width, height, frameRate);
-
-            var stopEvent = new ManualResetEvent(false);
-            var thread = new Thread(() =>
-            {
-                var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
-                encoder.FrameEncoded += (sender, e) =>
-                {
-                    var packet = e.Packet;
-                    pusher.PushPacket(packet);
-                };
-                var bitmap = _videoFrame;
-                try
-                {
-                    while (!stopEvent.WaitOne(1))
-                    {
-                        var start = Environment.TickCount;
-                        encoder.AddImage(bitmap);
-                        var timeUsed = Environment.TickCount - start;
-                        var timeToWait = waitInterval - timeUsed;
-                        Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
-                    }
-                    encoder.Flush();
-                }
-                finally
-                {
-                    encoder.Dispose();
-                    bitmap.Dispose();
-                    ReleaseDC(IntPtr.Zero, IntPtr.Zero);
-                }
-            });
-            thread.Start();
         }
     }
 }

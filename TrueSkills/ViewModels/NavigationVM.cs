@@ -1,9 +1,14 @@
-﻿using ReactiveUI;
+﻿using DotNetPusher.Pushers;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Net.NetworkInformation;
 using System.Reactive;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +17,7 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using TrueSkills.APIs;
 using TrueSkills.Enums;
+using TrueSkills.Exceptions;
 using TrueSkills.Interfaces;
 using TrueSkills.Views;
 
@@ -29,11 +35,10 @@ namespace TrueSkills.ViewModels
             get => _heightContent;
             set => this.RaiseAndSetIfChanged(ref _heightContent, value);
         }
-        private NavigationWindow _window;
-        public NavigationVM(NavigationWindow window)
+        public NavigationVM()
         {
-            _window = window;
             Initialization = InitializationAsync();
+            NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             Content = new DefaultHeaderUC();
             _timer = new DispatcherTimer
             {
@@ -42,42 +47,29 @@ namespace TrueSkills.ViewModels
             _timer.Tick += Timer_Tick;
             _timer.Start();
             ContentRenderedCommand = ReactiveCommand.Create(ContentRendered);
+            SupportingMethods.RtmpScreen(TemporaryVariables.GetStream().Result.Screen);
         }
-
+        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        {
+            if (e.IsAvailable)
+            {
+                Initialization = InitializationAsync();
+            }
+        }
         private async Task InitializationAsync()
         {
-            await TemporaryVariables.SubscribeLoadStepAsync();
-            await TemporaryVariables.SubscribeGetCountMessagesAsync();
+            if (App.IsNetwork)
+            {
+                await TemporaryVariables.SubscribeLoadStepAsync();
+                await TemporaryVariables.SubscribeGetCountMessagesAsync();
+            }
         }
-
 
         private void Timer_Tick(object sender, EventArgs e)
         {
             var time = TemporaryVariables.Time;
             if (time != null)
             {
-
-                //if (time.Value.TotalSeconds <= 0)
-                //{
-                //    if (Content is VmHeaderUC vmHeader)
-                //    {
-                //        vmHeader.TbTime.Text = time.Value.ToString();
-                //    }
-                //    if (Content is DefaultHeaderUC defaultHeader)
-                //    {
-                //        defaultHeader.IsStartTimer = false;
-                //        defaultHeader.TbTime.Text = time.Value.ToString();
-                //    }
-                //    _timer.Stop();
-                //    var response = Task.Run(TemporaryVariables.GetStep).Result;
-                //    if (response.Step == Step.ExamOver)
-                //    {
-                //        ExamEndWindow examEndWindow = new ExamEndWindow();
-                //        examEndWindow.Show();
-                //        _window.Close();
-                //    }
-                //}
-               
                 if (time.Value.TotalSeconds > 0)
                 {
                     time = time.Value.Add(TimeSpan.FromSeconds(-1));

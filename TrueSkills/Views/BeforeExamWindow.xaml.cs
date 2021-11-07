@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,10 +24,24 @@ namespace TrueSkills.Views
         public BeforeExamWindow(StepAPI step)
         {
             InitializeComponent();
+            NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             TbExam.Text = TemporaryVariables.GetProperty("a_Step" + (int)step.Step);
-            Initialization = TemporaryVariables.SubscribeLoadStepAsync();
+            Initialization = InitializationAsync();
         }
-
+        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+        {
+            if (e.IsAvailable)
+            {
+                Initialization = InitializationAsync();
+            }
+        }
+        private async Task InitializationAsync()
+        {
+            if (App.IsNetwork)
+            {
+                await TemporaryVariables.SubscribeLoadStepAsync();
+            }
+        }
         public Task Initialization { get; set; }
     }
 }

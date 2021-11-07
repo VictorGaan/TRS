@@ -1,7 +1,9 @@
-﻿using Notifications.Wpf.Core;
+﻿using Microsoft.Web.WebView2.Wpf;
+using Notifications.Wpf.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,11 +22,14 @@ namespace TrueSkills
 {
     public class TemporaryVariables
     {
+        public static Bitmap VideoFrame;
         public static ParticipentModel s_currentParticipent;
         public static Frame s_frame;
+        public static WebView2 s_webView;
         public static TimeSpan? Time;
         private static RoomAPI.Rootobject s_rooms;
         private static NotificationManager s_manager;
+        private static StreamAPI s_stream;
         private static int s_countExpert;
         private static int s_countSupport;
         public static bool IsAuthDevice = false;
@@ -36,35 +41,59 @@ namespace TrueSkills
             return s_manager;
         }
 
+        public static void NotNetwork()
+        {
+            MessageBox.Show(GetProperty("a_Network"), GetProperty("a_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static async Task<StreamAPI> GetStream()
+        {
+            if (s_stream == null)
+            {
+                try
+                {
+                    s_stream = await SupportingMethods.GetWebRequest<StreamAPI>(Url.s_streamUrl, true);
+                }
+                catch (CodeException ex)
+                {
+                    ShowException(ex);
+                }
+            }
+            return s_stream;
+        }
+
         private static bool s_isCheck = false;
         public static async Task SubscribeGetCountMessagesAsync()
         {
-            var url = await GetUrlAsync(Room.Expert, Operation.Get);
-            var secondUrl = await GetUrlAsync(Room.Support, Operation.Get);
-            var response = await SupportingMethods.PostWebRequest<MessageAPI.Rootobject>(url, true);
-            var secondResponse = await SupportingMethods.PostWebRequest<MessageAPI.Rootobject>(secondUrl, true);
-            var countExpert = response.Messages.Where(x => x.FullNameUser != s_currentParticipent.FullName).Count();
-            var countSupport = secondResponse.Messages.Where(x => x.FullNameUser != s_currentParticipent.FullName).Count();
-            if (s_isCheck)
+            if (App.IsNetwork)
             {
-                if (countExpert > s_countExpert)
+                var url = await GetUrlAsync(Room.Expert, Operation.Get);
+                var secondUrl = await GetUrlAsync(Room.Support, Operation.Get);
+                var response = await SupportingMethods.PostWebRequest<MessageAPI.Rootobject>(url, true);
+                var secondResponse = await SupportingMethods.PostWebRequest<MessageAPI.Rootobject>(secondUrl, true);
+                var countExpert = response.Messages.Where(x => x.FullNameUser != s_currentParticipent.FullName).Count();
+                var countSupport = secondResponse.Messages.Where(x => x.FullNameUser != s_currentParticipent.FullName).Count();
+                if (s_isCheck)
                 {
-                    await GetManager().ShowAsync(
-                           new NotificationContent { Title = "Сообщения", Message = "Вам пришло новое сообщение в комнате c экспертом, проверьте чат!", Type = NotificationType.Information },
-                            areaName: "WindowArea", expirationTime: TimeSpan.FromSeconds(10));
+                    if (countExpert > s_countExpert)
+                    {
+                        await GetManager().ShowAsync(
+                               new NotificationContent { Title = "Сообщения", Message = "Вам пришло новое сообщение в комнате c экспертом, проверьте чат!", Type = NotificationType.Information },
+                                areaName: "WindowArea", expirationTime: TimeSpan.FromSeconds(10));
+                    }
+                    if (countSupport > s_countSupport)
+                    {
+                        await GetManager().ShowAsync(
+                               new NotificationContent { Title = "Сообщения", Message = "Вам пришло новое сообщение в комнате c тех. помощью, проверьте чат!", Type = NotificationType.Information },
+                               areaName: "WindowArea", expirationTime: TimeSpan.FromSeconds(10));
+                    }
                 }
-                if (countSupport > s_countSupport)
-                {
-                    await GetManager().ShowAsync(
-                           new NotificationContent { Title = "Сообщения", Message = "Вам пришло новое сообщение в комнате c тех. помощью, проверьте чат!", Type = NotificationType.Information },
-                           areaName: "WindowArea", expirationTime: TimeSpan.FromSeconds(10));
-                }
+                s_isCheck = true;
+                s_countExpert = countExpert;
+                s_countSupport = countSupport;
+                await Task.Delay(5000);
+                await SubscribeGetCountMessagesAsync();
             }
-            s_isCheck = true;
-            s_countExpert = countExpert;
-            s_countSupport = countSupport;
-            await Task.Delay(5000);
-            await SubscribeGetCountMessagesAsync();
         }
 
         public static async Task<string> GetUrlAsync(Room room, Operation operation)
@@ -81,11 +110,11 @@ namespace TrueSkills
             }
             if (operation == Operation.Get)
             {
-                url = url + "/get";
+                url += "/get";
             }
             else if (operation == Operation.Send)
             {
-                url = url + "/send";
+                url += "/send";
             }
             return url;
         }
@@ -97,6 +126,9 @@ namespace TrueSkills
         }
 
 
+        public static bool LostRtmpCamera;
+        public static bool LostRtmpScreen;
+
         private static bool IsSome(string property)
         {
             return s_frame.Content.ToString().Contains(property);
@@ -104,70 +136,83 @@ namespace TrueSkills
 
         public static async Task SubscribeLoadStepAsync()
         {
-            if (s_currentParticipent != null)
+            if (App.IsNetwork)
             {
-                try
+                if (s_currentParticipent != null)
                 {
-                    var response = await GetStep();
-                    SearchBefore(response);
-                    var date = Convert.ToDateTime(response.End);
-                    var nowResponse = await SupportingMethods.GetWebRequest<NowAPI>(Url.s_nowUrl, true);
-                    var now = Convert.ToDateTime(nowResponse.Time);
-                    if (now > date)
+                    try
                     {
-                        Time = new TimeSpan();
-                    }
-                    else
-                    {
-                        var substract = (date - now).Duration();
-                        Time = substract;
-                    }
-                    if (response.Step == Step.ExamHasStartedDocumentDisplayed)
-                    {
-                        if (IsAuthDevice && !IsSome("DocumentsPage"))
+                        var response = await GetStep();
+                        var date = Convert.ToDateTime(response.End);
+                        var nowResponse = await SupportingMethods.GetWebRequest<NowAPI>(Url.s_nowUrl, true);
+                        var now = Convert.ToDateTime(nowResponse.Time);
+                        if (now > date || date.TimeOfDay.TotalSeconds <= 0)
                         {
-                            s_frame.Navigate(new DocumentsPage());
+                            Time = null;
+                        }
+                        else
+                        {
+                            var substract = (date - now).Duration();
+                            Time = substract;
+                        }
+
+                        if (IsAuthDevice && LostRtmpScreen)
+                        {
+                            SupportingMethods.RtmpScreen(GetStream().Result.Screen);
+                        }
+
+                        if (IsAuthDevice && LostRtmpCamera)
+                        {
+                            SupportingMethods.RtmpCamera(GetStream().Result.Camera);
+                        }
+                        SearchBefore(response);
+                        if (response.Step == Step.ExamHasStartedDocumentDisplayed)
+                        {
+                            if (IsAuthDevice && !IsSome("DocumentsPage"))
+                            {
+                                s_frame.Navigate(new DocumentsPage());
+                            }
+                        }
+                        else if (response.Step == Step.ExamStartTaskDisplay)
+                        {
+                            if (IsAuthDevice && !IsSome("TaskPage"))
+                            {
+                                s_frame.Navigate(new TaskPage());
+                            }
+                        }
+                        else if (response.Step == Step.ExamStartModuleUnderway)
+                        {
+                            if (IsAuthDevice && !IsSome("VMPage"))
+                            {
+                                s_frame.Navigate(new VMPage());
+                            }
+                        }
+                        else if (response.Step == Step.ExamHasStartedModuleNotStarted)
+                        {
+                            BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
+                            beforeExamWindow.ShowDialog();
+                        }
+                        else if (response.Step == Step.ExamOver)
+                        {
+                            new ExamEndWindow().Show();
+                            CloseAllWindows();
                         }
                     }
-                    else if (response.Step == Step.ExamStartTaskDisplay)
+                    catch (CodeException ex)
                     {
-                        if (IsAuthDevice && !IsSome("TaskPage"))
-                        {
-                            s_frame.Navigate(new TaskPage());
-                        }
-                    }
-                    else if (response.Step == Step.ExamStartModuleUnderway)
-                    {
-                        if (IsAuthDevice && !IsSome("VMPage"))
-                        {
-                            s_frame.Navigate(new VMPage());
-                        }
-                    }
-                    else if (response.Step==Step.ExamHasStartedModuleNotStarted)
-                    {
-                        BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
-                        beforeExamWindow.ShowDialog();
-                    }
-                    else if (response.Step == Step.ExamOver)
-                    {
-                        new ExamEndWindow().Show();
-                        CloseAllWindows();
+                        ShowException(ex);
                     }
                 }
-                catch (CodeException ex)
-                {
-                    ShowException(ex);
-                }
+                await Task.Delay(30000);
+                await SubscribeLoadStepAsync();
             }
-            await Task.Delay(30000);
-            await SubscribeLoadStepAsync();
         }
 
         private static void CloseAllWindows()
         {
             foreach (var window in App.Current.Windows)
             {
-                if (window.GetType()!=typeof(ExamEndWindow))
+                if (window.GetType() != typeof(ExamEndWindow))
                 {
                     (window as Window).Close();
                 }
@@ -211,6 +256,7 @@ namespace TrueSkills
 
         public static void Exit()
         {
+            KioskModeAPI.Unlock();
             Process.GetCurrentProcess().Kill();
         }
         public static string PathXaml;
@@ -307,57 +353,59 @@ namespace TrueSkills
 
 
         private static VKey[] AllowedKeys = new VKey[] {
-                VKey.Number0,
-                VKey.Number1,
-                VKey.Number2,
-                VKey.Number3,
-                VKey.Number4,
-                VKey.Number5,
-                VKey.Number6,
-                VKey.Number7,
-                VKey.Number8,
-                VKey.Number9,
-                VKey.Multiply,
-                VKey.Add,
-                VKey.Separator,
-                VKey.Subtract,
-                VKey.Decimal,
-                VKey.Divide,
-                VKey.Up,
-                VKey.Left,
-                VKey.Right,
-                VKey.Down,
-                VKey.Delete,
-                VKey.Back,
-                VKey.NumberPad0,
-                VKey.NumberPad1,
-                VKey.NumberPad2,
-                VKey.NumberPad3,
-                VKey.NumberPad4,
-                VKey.NumberPad5,
-                VKey.NumberPad6,
-                VKey.NumberPad7,
-                VKey.NumberPad8,
-                VKey.NumberPad9,
-                VKey.NumberKeyLock,
-                VKey.Menu,
-                VKey.Tab
+            VKey.Q,
+            VKey.W,
+            VKey.E,
+            VKey.R,
+            VKey.T,
+            VKey.Y,
+            VKey.U,
+            VKey.I,
+            VKey.O,
+            VKey.P,
+            VKey.A,
+            VKey.S,
+            VKey.D,
+            VKey.F,
+            VKey.G,
+            VKey.H,
+            VKey.J,
+            VKey.K,
+            VKey.L,
+            VKey.Z,
+            VKey.X,
+            VKey.C,
+            VKey.V,
+            VKey.B,
+            VKey.N,
+            VKey.M,
+            VKey.Number0,
+            VKey.Number1,
+            VKey.Number2,
+            VKey.Number3,
+            VKey.Number4,
+            VKey.Number5,
+            VKey.Number6,
+            VKey.Number7,
+            VKey.Number8,
+            VKey.Number9,
+            VKey.Space,
+            VKey.LeftShift,
+            VKey.RightShift,
+            VKey.Back,
             };
 
         private static VKey[] EscapeKeys = new VKey[] {
-                VKey.E,
-                VKey.S,
-                VKey.C,
-                VKey.F,
-                VKey.R,
-                VKey.O,
-                VKey.M,
-                VKey.K,
-                VKey.I,
-                VKey.O,
-                VKey.S,
-                VKey.K,
-                VKey.F1
+                VKey.Delete,
+                VKey.LeftControl,
+                VKey.RightControl,
+                VKey.RightMenu,
+                VKey.LeftMenu,
+                VKey.LeftWindows,
+                VKey.RightWindows,
+                VKey.Escape,
+                VKey.Menu,
+                VKey.Tab
             };
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Input;
 using TrueSkills.ViewModels;
 
@@ -12,9 +13,9 @@ namespace TrueSkills
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowVM(); 
+            DataContext = new MainWindowVM();
         }
-
+        
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try
