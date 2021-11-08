@@ -45,6 +45,11 @@ namespace TrueSkills.ViewModels
                 {
                     TemporaryVariables.s_frame.Navigate(new DocumentsPage());
                 }
+                if (response.Step == Step.ExamHasStartedModuleNotStarted)
+                {
+                    BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
+                    beforeExamWindow.ShowDialog();
+                }
             }
             else
             {

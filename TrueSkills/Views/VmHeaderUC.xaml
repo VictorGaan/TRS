@@ -39,7 +39,7 @@
         </Grid.RowDefinitions>
         <TextBlock Text="TS" Style="{StaticResource tsTextBlock}"></TextBlock>
         <TextBlock Grid.Column="1" Text="{DynamicResource a_DemoExam}" Style="{StaticResource demoTextBlock}"></TextBlock>
-        <Grid Margin="10 10 0 10" Grid.Row="1" Grid.ColumnSpan="2">
+        <Grid Margin="10 10 0 10" Grid.Row="1" Grid.ColumnSpan="2" Name="DateGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>

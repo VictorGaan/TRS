@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using CefSharp;
+using Microsoft.Win32;
 using ReactiveUI;
 using System;
 using System.Net.NetworkInformation;
@@ -60,7 +61,10 @@ namespace TrueSkills.ViewModels
         {
             ReconnectingWindow reconnectingWindow = new ReconnectingWindow();
             reconnectingWindow.ShowDialog();
-            TemporaryVariables.s_webView.Reload();
+            //GetVM();
+            TemporaryVariables.s_webView.Load(AddressVm);
+            TemporaryVariables.s_webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
+
         }
         public async Task GetVM()
         {

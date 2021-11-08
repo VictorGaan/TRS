@@ -1,4 +1,4 @@
-﻿using Microsoft.Web.WebView2.Wpf;
+﻿using CefSharp.Wpf;
 using Notifications.Wpf.Core;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace TrueSkills
         public static Bitmap VideoFrame;
         public static ParticipentModel s_currentParticipent;
         public static Frame s_frame;
-        public static WebView2 s_webView;
+        public static ChromiumWebBrowser s_webView;
         public static TimeSpan? Time;
         private static RoomAPI.Rootobject s_rooms;
         private static NotificationManager s_manager;
@@ -133,7 +133,7 @@ namespace TrueSkills
         {
             return s_frame.Content.ToString().Contains(property);
         }
-
+        static Rtmp Rtmp = new Rtmp();
         public static async Task SubscribeLoadStepAsync()
         {
             if (App.IsNetwork)
@@ -158,12 +158,12 @@ namespace TrueSkills
 
                         if (IsAuthDevice && LostRtmpScreen)
                         {
-                            SupportingMethods.RtmpScreen(GetStream().Result.Screen);
+                            Rtmp.RtmpScreen(GetStream().Result.Screen);
                         }
 
                         if (IsAuthDevice && LostRtmpCamera)
                         {
-                            SupportingMethods.RtmpCamera(GetStream().Result.Camera);
+                            Rtmp.RtmpCamera(GetStream().Result.Camera);
                         }
                         SearchBefore(response);
                         if (response.Step == Step.ExamHasStartedDocumentDisplayed)

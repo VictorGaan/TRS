@@ -170,7 +170,7 @@ namespace TrueSkills.Models
             {
                 SoundSources.Add(WaveIn.GetCapabilities(i));
             }
-            List<CoreAudioDevice> devices = new CoreAudioController().GetDevices().Where(x => x.IsPlaybackDevice).DistinctBy(x => x.FullName).ToList();
+            List<CoreAudioDevice> devices = new CoreAudioController().GetDevices().Where(x => x.IsPlaybackDevice&&x.FullName!="Unknown").DistinctBy(x => x.FullName).ToList();
             foreach (var item in devices)
             {
                 PlaybackDevices.Add(item);
@@ -265,6 +265,7 @@ namespace TrueSkills.Models
 
 
         private bool _isSendRtmp = true;
+        Rtmp Rtmp = new Rtmp();
         private void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
@@ -274,7 +275,7 @@ namespace TrueSkills.Models
             {
                 if (_isSendRtmp && TemporaryVariables.GetStream().Result.Camera != null)
                 {
-                    SupportingMethods.RtmpCamera(TemporaryVariables.GetStream().Result.Camera);
+                    Rtmp.RtmpCamera(TemporaryVariables.GetStream().Result.Camera);
                 }
             }
             _isSendRtmp = false;

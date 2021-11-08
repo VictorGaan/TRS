@@ -27,10 +27,12 @@
             HorizontalAlignment="Center" 
             VerticalAlignment="Center"
             >
-            <TextBlock 
+            <TextBlock
                 Style="{StaticResource inputTextBlock}"  
                 Text="{DynamicResource tm_LFM}"></TextBlock>
-            <TextBox 
+            <TextBox
+                Name="FIO"
+                TextChanged="FIO_TextChanged"
                 MaxLength="255" 
                 Validation.ErrorTemplate="{StaticResource textBoxErrorTemplate}"
                 Style="{StaticResource defaultTextBox}"

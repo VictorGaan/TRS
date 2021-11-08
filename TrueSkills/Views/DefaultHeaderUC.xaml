@@ -17,7 +17,7 @@
         </Grid.ColumnDefinitions>
         <TextBlock Style="{DynamicResource tsTextBlock}">TS</TextBlock>
         <TextBlock Style="{DynamicResource demoTextBlock}" Grid.Column="1" Text="{DynamicResource a_DemoExam}"></TextBlock>
-        <Grid Background="{DynamicResource HeaderBackColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Visibility="{Binding VisibilityDate}">
+        <Grid Name="DateGrid" Background="{DynamicResource HeaderBackColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Visibility="{Binding VisibilityDate}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
