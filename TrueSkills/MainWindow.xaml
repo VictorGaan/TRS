@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:TrueSkills.Views"
         mc:Ignorable="d"
         Title="{DynamicResource tm_Title}" MouseDown="Window_MouseDown"
-        Style="{StaticResource defaultWindow}" Height="364" Width="400" WindowStyle="None" WindowStartupLocation="CenterScreen">
+        Style="{StaticResource defaultWindow}" Height="364" AllowsTransparency="True" Width="400" WindowStyle="None" WindowStartupLocation="CenterScreen">
 
     <Grid Background="{StaticResource BackColor}">
         <Grid.RowDefinitions>
@@ -51,11 +51,12 @@
 
         </UniformGrid>
         <Button 
+            Cursor="Hand"
             Grid.Row="2" 
             Command="{Binding AuthorizationCommand}"
             Content="{DynamicResource tm_AuthorizationCommand}"
             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-            Style="{StaticResource AuthButton}">
+            Style="{StaticResource authButton}">
         </Button>
     </Grid>
 </Window>

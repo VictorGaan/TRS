@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,7 @@ using TrueSkills.APIs;
 using TrueSkills.Enums;
 using TrueSkills.Exceptions;
 using TrueSkills.Interfaces;
+using TrueSkills.Views;
 
 namespace TrueSkills.Models
 {
@@ -19,7 +21,6 @@ namespace TrueSkills.Models
     {
         #region Requests
         private const string PROCESSOR_QUERY = "SELECT * FROM Win32_Processor";
-        private const string NETWORK_ADAPTER_QUERY = "SELECT * FROM Win32_NetworkAdapter";
         private const string COMPUTER_SYSTEM_QUERY = "SELECT * FROM Win32_ComputerSystem";
         #endregion
         private bool _isEnabled;
@@ -76,7 +77,6 @@ namespace TrueSkills.Models
                     VisibilityGrid = Visibility.Visible;
                 });
         }
-
         private async Task SendSpecificationAsync()
         {
             if (App.IsNetwork)
@@ -144,15 +144,16 @@ namespace TrueSkills.Models
         {
             await Task.Run(() =>
             {
-                ManagementObjectSearcher search = new ManagementObjectSearcher(NETWORK_ADAPTER_QUERY);
-                foreach (ManagementObject obj in search.Get())
-                {
-                    if (obj.Properties["Speed"].Value != null)
-                    {
-                        SpecificationPc.Internet.Value = long.Parse(obj.Properties["Speed"].Value.ToString()) / 1000000;
-                        SpecificationPc.Internet.Measurement = "Mbit/s";
-                    }
-                }
+                 double speeds = new double();
+                int jQueryFileSize = 261;
+                WebClient client = new WebClient();
+                DateTime startTime = DateTime.Now;
+                client.DownloadFile("http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js", "jQuery.js");
+                DateTime endTime = DateTime.Now;
+                speeds = Math.Round((jQueryFileSize / (endTime - startTime).TotalSeconds));
+                SpecificationPc.Internet.Value = (long)speeds;
+                SpecificationPc.Internet.Measurement = "Mbit/s";
+
             });
         }
         private int GetCountMonitors() => System.Windows.Forms.Screen.AllScreens.Count();
@@ -183,6 +184,7 @@ namespace TrueSkills.Models
                 int value = 1;
                 foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                 {
+
                     SpecificationPc.Monitors.Add(new SpecificationPcAPI.Monitor() { Value = value, Measurement = screen.Bounds.Width + "*" + screen.Bounds.Height });
                     value += 1;
                 }

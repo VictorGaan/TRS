@@ -48,7 +48,7 @@ namespace TrueSkills.Models
                 {
                     var response = await SupportingMethods.PostWebRequest<ParticipentAPI, TokenAPI>(Url.s_authUrl, serializeObject);
                     _token = response.Token;
-                    TemporaryVariables.s_currentParticipent = this;
+                    TemporaryVariables.currentParticipent = this;
                     await TemporaryVariables.GetStream();
                     var step = await TemporaryVariables.GetStep();
                     if (step.Step != Step.ExamOver)

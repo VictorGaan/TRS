@@ -31,9 +31,23 @@ namespace TrueSkills.Views
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Ring.Visibility = Visibility.Visible;
             if (_isAvailable)
             {
                 Close();
+            }
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                if (e.ChangedButton == MouseButton.Left)
+                    DragMove();
+            }
+            catch
+            {
+                return;
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using TrueSkills.Enums;
 using TrueSkills.Exceptions;
 using TrueSkills.Interfaces;
@@ -66,6 +67,26 @@ namespace TrueSkills.Models
                     TemporaryVariables.ShowException(ex);
                 }
                 Message = string.Empty;
+            }
+        }
+        public async Task SendMessageAsync(Room room, Key key)
+        {
+            if (key == Key.Enter)
+            {
+                if (App.IsNetwork)
+                {
+                    var url = await TemporaryVariables.GetUrlAsync(room, Operation.Send);
+                    var request = new { text = Message };
+                    try
+                    {
+                        await SupportingMethods.PostWebRequest(url, request, true);
+                    }
+                    catch (CodeException ex)
+                    {
+                        TemporaryVariables.ShowException(ex);
+                    }
+                    Message = string.Empty;
+                }
             }
         }
     }

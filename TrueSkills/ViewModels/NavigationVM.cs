@@ -1,4 +1,5 @@
 ﻿using DotNetPusher.Pushers;
+using Notifications.Wpf;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Threading;
@@ -26,8 +28,8 @@ namespace TrueSkills.ViewModels
     public class NavigationVM : ReactiveObject, IAsyncInitialization
     {
         private Visibility _datePickerVisibility;
-        private UserControl _content;
-        private int _heightContent;
+        private System.Windows.Controls.UserControl _content;
+        private double _heightContent;
         private DispatcherTimer _timer;
         public ReactiveCommand<Unit, Unit> ContentRenderedCommand { get; }
         public Task Initialization { get; set; }
@@ -37,14 +39,15 @@ namespace TrueSkills.ViewModels
             get => _datePickerVisibility;
             set => this.RaiseAndSetIfChanged(ref _datePickerVisibility, value);
         }
-        public int HeightContent
+        public double HeightContent
         {
             get => _heightContent;
             set => this.RaiseAndSetIfChanged(ref _heightContent, value);
         }
-        Rtmp Rtmp = new Rtmp();
+        public Rtmp rtmp = new Rtmp();
         public NavigationVM()
         {
+            HeightContent = double.NaN;
             DatePickerVisibility = Visibility.Visible;
             Initialization = InitializationAsync();
             NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
@@ -56,7 +59,14 @@ namespace TrueSkills.ViewModels
             _timer.Tick += Timer_Tick;
             _timer.Start();
             ContentRenderedCommand = ReactiveCommand.Create(ContentRendered);
-            Rtmp.RtmpScreen(TemporaryVariables.GetStream().Result.Screen);
+            try
+            {
+                rtmp.RtmpScreen(TemporaryVariables.GetStream().Result.Screen);
+            }
+            catch (Exception ex)
+            {
+                new MessageBoxWindow(ex.Message, TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+            }
         }
         private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
@@ -76,91 +86,53 @@ namespace TrueSkills.ViewModels
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            var time = TemporaryVariables.Time;
+            var time = TemporaryVariables.time;
             if (time != null)
             {
                 if (time.Value.TotalSeconds > 0)
                 {
                     DatePickerVisibility = Visibility.Visible;
                     time = time.Value.Add(TimeSpan.FromSeconds(-1));
-                    TemporaryVariables.Time = time;
-                    if (Content is VmHeaderUC vmHeader)
-                    {
-                        vmHeader.DateGrid.Visibility = DatePickerVisibility;
-                        vmHeader.TbTime.Text = time.Value.ToString();
-                    }
+                    TemporaryVariables.time = time;
                     if (Content is DefaultHeaderUC defaultHeader)
                     {
                         defaultHeader.DateGrid.Visibility = DatePickerVisibility;
-                        defaultHeader.IsStartTimer = false;
                         defaultHeader.TbTime.Text = time.Value.ToString();
                     }
                 }
                 else
                 {
-                    CheckContent();
                     DatePickerVisibility = Visibility.Collapsed;
                 }
             }
             else
             {
-                CheckContent();
                 DatePickerVisibility = Visibility.Collapsed;
             }
         }
 
-        private void CheckContent()
-        {
-            if (Content is VmHeaderUC vmHeader)
-            {
-                vmHeader.DateGrid.Visibility = DatePickerVisibility;
-            }
-            if (Content is DefaultHeaderUC defaultHeader)
-            {
-                defaultHeader.DateGrid.Visibility = DatePickerVisibility;
-                defaultHeader.IsStartTimer = true;
-            }
-        }
-
-        public UserControl Content
+        public System.Windows.Controls.UserControl Content
         {
             get => _content;
-            set
-            {
-                if (value.GetType().Name == typeof(VmHeaderUC).Name)
-                {
-                    HeightContent = 135;
-                }
-                else
-                {
-                    HeightContent = 80;
-                }
-                this.RaiseAndSetIfChanged(ref _content, value);
-
-            }
+            set => this.RaiseAndSetIfChanged(ref _content, value);
         }
 
         public void ContentRendered()
         {
-            Page page = TemporaryVariables.s_frame.Content as Page;
-            TemporaryVariables.Sources.Add(TemporaryVariables.s_frame.Content.ToString());
+            Page page = TemporaryVariables.frame.Content as Page;
+            TemporaryVariables.sources.Add(TemporaryVariables.frame.Content.ToString());
             if (page is VMPage)
             {
-                if (Content.GetType() == typeof(VmHeaderUC))
-                {
-                    return;
-                }
-                Content = new VmHeaderUC();
+                HeightContent = double.NaN;
+                Content = null;
+                new VmHeaderUC().Show();
+                return;
             }
-            else
+            if (Content.GetType() == typeof(DefaultHeaderUC))
             {
-                if (Content.GetType() == typeof(DefaultHeaderUC))
-                {
-                    return;
-                }
-                Content = new DefaultHeaderUC();
+                return;
             }
+            Content = new DefaultHeaderUC();
         }
-
     }
 }

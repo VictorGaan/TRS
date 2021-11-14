@@ -35,7 +35,7 @@ namespace TrueSkills
             request.ContentType = "application/json";
             if (isToken)
             {
-                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.s_currentParticipent.Token}");
+                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.currentParticipent.Token}");
             }
             var json = JsonConvert.SerializeObject(serializeObject);
             var byteArray = Encoding.UTF8.GetBytes(json);
@@ -75,7 +75,7 @@ namespace TrueSkills
             request.ContentType = "application/json";
             if (isToken)
             {
-                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.s_currentParticipent.Token}");
+                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.currentParticipent.Token}");
             }
             var json = JsonConvert.SerializeObject(serializeObject);
             var byteArray = Encoding.UTF8.GetBytes(json);
@@ -116,7 +116,7 @@ namespace TrueSkills
             request.ContentType = "application/json";
             if (isToken)
             {
-                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.s_currentParticipent.Token}");
+                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.currentParticipent.Token}");
             }
             WebResponse webResponse = await request.GetResponseAsync();
             var response = string.Empty;
@@ -150,7 +150,7 @@ namespace TrueSkills
             request.ContentType = "application/json";
             if (isToken)
             {
-                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.s_currentParticipent.Token}");
+                request.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.currentParticipent.Token}");
             }
             using WebResponse webResponse = await request.GetResponseAsync();
             var response = string.Empty;
@@ -177,7 +177,7 @@ namespace TrueSkills
             {
                 if (isToken)
                 {
-                    client.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.s_currentParticipent.Token}");
+                    client.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {TemporaryVariables.currentParticipent.Token}");
                 }
                 client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
                 Uri uri = new Uri(url + $"\\{id}");

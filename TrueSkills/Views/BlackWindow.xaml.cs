@@ -1,9 +1,6 @@
-﻿using Notifications.Wpf;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,20 +10,26 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using TrueSkills.Enums;
-using TrueSkills.ViewModels;
 
 namespace TrueSkills.Views
 {
     /// <summary>
-    /// Логика взаимодействия для ChatWindow.xaml
+    /// Логика взаимодействия для BlackWindow.xaml
     /// </summary>
-    public partial class ChatWindow : Window
+    public partial class BlackWindow : Window
     {
-        public ChatWindow(Room room = Room.Expert)
+        public BlackWindow()
         {
             InitializeComponent();
-            DataContext = new ChatVM(room);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ResizeMode = ResizeMode.NoResize;
+            WindowStyle = WindowStyle.None;
+            this.Height +=1000;
+            this.Width +=1000;
+            new Locker();
         }
     }
 }

@@ -36,12 +36,12 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <PackageReference Include="NAudio" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Notifications.Wpf.Core" Version="1.3.2" />
     <PackageReference Include="ReactiveUI" Version="16.2.6" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="15.1.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="16.2.6" />
     <PackageReference Include="System.Management" Version="5.0.0" />
     <PackageReference Include="System.Runtime.WindowsRuntime" Version="4.7.0" />
+    <PackageReference Include="WindowsProgressRing" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +51,12 @@
   <ItemGroup>
     <Reference Include="AudioSwitcher.AudioApi.CoreAudio">
       <HintPath>..\..\..\..\.nuget\packages\audioswitcher.audioapi.coreaudio\3.0.0.1\lib\net40\AudioSwitcher.AudioApi.CoreAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="DockFloat">
+      <HintPath>bin\Release\netcoreapp3.1\DockFloat.dll</HintPath>
+    </Reference>
+    <Reference Include="Notifications.Wpf">
+      <HintPath>bin\Release\netcoreapp3.1\Notifications.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Windows">
       <HintPath>bin\Debug\netcoreapp3.1\Windows.winmd</HintPath>
@@ -78,10 +84,10 @@
 
   <ItemGroup>
     <Page Update="Languages\Language.en-US.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
     <Page Update="Languages\Language.ru-RU.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
 

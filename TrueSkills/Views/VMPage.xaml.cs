@@ -14,7 +14,7 @@ namespace TrueSkills.Views
         public VMPage()
         {
             InitializeComponent();
-            TemporaryVariables.s_webView = webView;
+            TemporaryVariables.webView = webView;
             DataContext = new VirtualMachineVM();
             webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
         }

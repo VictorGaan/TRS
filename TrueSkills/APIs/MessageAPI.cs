@@ -68,9 +68,9 @@ namespace TrueSkills.APIs
             {
                 get
                 {
-                    if (TemporaryVariables.s_currentParticipent == null)
+                    if (TemporaryVariables.currentParticipent == null)
                         return false;
-                    if (FullNameUser == TemporaryVariables.s_currentParticipent.FullName)
+                    if (FullNameUser == TemporaryVariables.currentParticipent.FullName)
                         return true;
                     return false;
                 }

@@ -21,17 +21,7 @@ namespace TrueSkills
 
         public static T GetValueFromJson<T>(this string response)
         {
-            try
-            {
-                return JsonConvert.DeserializeObject<T>(response);
-
-            }
-            catch (Exception ex)
-            {
-
-                Debug.WriteLine("ERROR " + ex.Message);
-            }
-            return default(T);
+            return JsonConvert.DeserializeObject<T>(response);
         }
 
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>

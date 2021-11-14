@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using TrueSkills.APIs;
+using TrueSkills.Exceptions;
 using TrueSkills.Interfaces;
 
 namespace TrueSkills
@@ -19,12 +21,12 @@ namespace TrueSkills
         }
         public async Task SubscribeCheckServerAsync()
         {
-            var response = await SupportingMethods.GetWebRequest<NowAPI>(Url.s_nowUrl, true);
-            if (response is NowAPI)
+            try
             {
+                var response = await SupportingMethods.GetWebRequest<NowAPI>(Url.s_nowUrl, false);
                 ServerNetworkAvailabilityChanged?.Invoke(true);
             }
-            else
+            catch (CodeException)
             {
                 ServerNetworkAvailabilityChanged?.Invoke(false);
             }

@@ -6,6 +6,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace TrueSkills
 {
@@ -56,57 +57,65 @@ namespace TrueSkills
                 pusher.StartPush(pushUrl, width, height, frameRate);
 
                 var stopEvent = new ManualResetEvent(false);
-                Thread thread=new Thread(()=> { });
-                thread = new Thread(() =>
-                {
-                    var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
-                    encoder.FrameEncoded += (sender, e) =>
-                    {
-                        if (IsNetwork)
-                        {
-                            var packet = e.Packet;
-                            pusher.PushPacket(packet);
-                        }
+                screenThread = new Thread(() =>
+               {
+                   var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
+                   encoder.FrameEncoded += (sender, e) =>
+                   {
+                       if (IsNetwork)
+                       {
+                           var packet = e.Packet;
+                           pusher.PushPacket(packet);
+                       }
 
-                    };
-                    var screenDc = GetDC(IntPtr.Zero);
-                    var bitmap = new Bitmap(screenWidth, screenHeight);
-                    if (IsNetwork)
-                    {
-                        try
-                        {
-                            while (!stopEvent.WaitOne(1))
-                            {
-                                var start = Environment.TickCount;
-                                using (var graphic = Graphics.FromImage(bitmap))
-                                {
-                                    var imageDc = graphic.GetHdc();
-                                    BitBlt(imageDc, 0, 0, width, height, screenDc, 0, 0, 0x00CC0020);
-                                }
-                                encoder.AddImage(bitmap);
-                                var timeUsed = Environment.TickCount - start;
-                                var timeToWait = waitInterval - timeUsed;
-                                Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
-                            }
-                            encoder.Flush();
-                        }
-                        finally
-                        {
-                            encoder.Dispose();
-                            bitmap.Dispose();
-                            ReleaseDC(IntPtr.Zero, screenDc);
-                            TemporaryVariables.LostRtmpScreen = true;
-                            stopEvent.Set();
+                   };
+                   var screenDc = GetDC(IntPtr.Zero);
+                   var bitmap = new Bitmap(screenWidth, screenHeight);
+                   if (IsNetwork)
+                   {
+                       try
+                       {
+                           while (!stopEvent.WaitOne(1))
+                           {
+                               var start = Environment.TickCount;
+                               using (var graphic = Graphics.FromImage(bitmap))
+                               {
+                                   var imageDc = graphic.GetHdc();
+                                   BitBlt(imageDc, 0, 0, width, height, screenDc, 0, 0, 0x00CC0020);
+                               }
+                               encoder.AddImage(bitmap);
+                               var timeUsed = Environment.TickCount - start;
+                               var timeToWait = waitInterval - timeUsed;
+                               Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
+                           }
+                           encoder.Flush();
+                           GC.Collect();
+                           GC.WaitForPendingFinalizers();
+                           GC.Collect();
+                       }
+                       finally
+                       {
+                           encoder.Dispose();
+                           bitmap.Dispose();
+                           ReleaseDC(IntPtr.Zero, screenDc);
+                           TemporaryVariables.lostRtmpScreen = true;
+                           stopEvent.Set();
 
-                            thread.Join();
-                            pusher.StopPush();
-                            pusher.Dispose();
-                        }
-                    }
-                });
-                thread.Start();
+                           screenThread.Join();
+                           pusher.StopPush();
+                           pusher.Dispose();
+                           GC.Collect();
+                           GC.WaitForPendingFinalizers();
+                           GC.Collect();
+                       }
+                   }
+               });
+                screenThread.Start();
             }
         }
+
+        static Thread cameraThread = new Thread(() => { });
+        static Thread screenThread = new Thread(() => { });
 
         public void RtmpCamera(string url)
         {
@@ -129,8 +138,7 @@ namespace TrueSkills
                 pusher.StartPush(pushUrl, width, height, frameRate);
 
                 var stopEvent = new ManualResetEvent(false);
-                Thread thread = new Thread(() => { });
-                thread = new Thread(() =>
+                cameraThread = new Thread(() =>
                 {
                     var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
                     encoder.FrameEncoded += (sender, e) =>
@@ -141,7 +149,7 @@ namespace TrueSkills
                             pusher.PushPacket(packet);
                         }
                     };
-                    var bitmap = TemporaryVariables.VideoFrame;
+                    var bitmap = TemporaryVariables.videoFrame;
                     if (IsNetwork)
                     {
                         try
@@ -155,22 +163,28 @@ namespace TrueSkills
                                 Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
                             }
                             encoder.Flush();
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+                            GC.Collect();
                         }
                         finally
                         {
                             encoder.Dispose();
                             bitmap.Dispose();
                             ReleaseDC(IntPtr.Zero, IntPtr.Zero);
-                            TemporaryVariables.LostRtmpCamera = true;
+                            TemporaryVariables.lostRtmpCamera = true;
 
                             stopEvent.Set();
-                            thread.Join();
+                            cameraThread.Join();
                             pusher.StopPush();
                             pusher.Dispose();
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+                            GC.Collect();
                         }
                     }
                 });
-                thread.Start();
+                cameraThread.Start();
             }
         }
     }

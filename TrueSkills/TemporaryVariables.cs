@@ -1,5 +1,5 @@
 ﻿using CefSharp.Wpf;
-using Notifications.Wpf.Core;
+using Notifications.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,42 +22,37 @@ namespace TrueSkills
 {
     public class TemporaryVariables
     {
-        public static Bitmap VideoFrame;
-        public static ParticipentModel s_currentParticipent;
-        public static Frame s_frame;
-        public static ChromiumWebBrowser s_webView;
-        public static TimeSpan? Time;
-        private static RoomAPI.Rootobject s_rooms;
+        public static Bitmap videoFrame;
+        public static ParticipentModel currentParticipent;
         private static NotificationManager s_manager;
-        private static StreamAPI s_stream;
+        public static Frame frame;
+        public static ChromiumWebBrowser webView;
+        public static TimeSpan? time;
+        public static RoomAPI.Rootobject s_rooms;
+        public static StreamAPI s_stream;
         private static int s_countExpert;
         private static int s_countSupport;
-        public static bool IsAuthDevice = false;
-        public static List<string> Sources = new List<string>();
+        public static bool isAuthDevice = false;
+        public static List<string> sources = new List<string>();
         public static NotificationManager GetManager()
         {
             if (s_manager == null)
+            {
                 s_manager = new NotificationManager();
+            }
             return s_manager;
         }
 
         public static void NotNetwork()
         {
-            MessageBox.Show(GetProperty("a_Network"), GetProperty("a_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+            new MessageBoxWindow(GetProperty("a_Network"), GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
         }
 
         public static async Task<StreamAPI> GetStream()
         {
             if (s_stream == null)
             {
-                try
-                {
-                    s_stream = await SupportingMethods.GetWebRequest<StreamAPI>(Url.s_streamUrl, true);
-                }
-                catch (CodeException ex)
-                {
-                    ShowException(ex);
-                }
+                s_stream = await SupportingMethods.GetWebRequest<StreamAPI>(Url.s_streamUrl, true);
             }
             return s_stream;
         }
@@ -71,26 +66,29 @@ namespace TrueSkills
                 var secondUrl = await GetUrlAsync(Room.Support, Operation.Get);
                 var response = await SupportingMethods.PostWebRequest<MessageAPI.Rootobject>(url, true);
                 var secondResponse = await SupportingMethods.PostWebRequest<MessageAPI.Rootobject>(secondUrl, true);
-                var countExpert = response.Messages.Where(x => x.FullNameUser != s_currentParticipent.FullName).Count();
-                var countSupport = secondResponse.Messages.Where(x => x.FullNameUser != s_currentParticipent.FullName).Count();
+                var countExpert = response.Messages.Where(x => x.FullNameUser != currentParticipent.FullName).Count();
+                var countSupport = secondResponse.Messages.Where(x => x.FullNameUser != currentParticipent.FullName).Count();
                 if (s_isCheck)
                 {
                     if (countExpert > s_countExpert)
                     {
-                        await GetManager().ShowAsync(
-                               new NotificationContent { Title = "Сообщения", Message = "Вам пришло новое сообщение в комнате c экспертом, проверьте чат!", Type = NotificationType.Information },
+                        GetManager().Show(
+                               new NotificationContent { Title = GetProperty("a_NotificationTitle2"), Message = GetProperty("a_NotificationChat1"), Type = NotificationType.Information },
                                 areaName: "WindowArea", expirationTime: TimeSpan.FromSeconds(10));
                     }
                     if (countSupport > s_countSupport)
                     {
-                        await GetManager().ShowAsync(
-                               new NotificationContent { Title = "Сообщения", Message = "Вам пришло новое сообщение в комнате c тех. помощью, проверьте чат!", Type = NotificationType.Information },
+                        GetManager().Show(
+                               new NotificationContent { Title = GetProperty("a_NotificationTitle2"), Message = GetProperty("a_NotificationChat2"), Type = NotificationType.Information },
                                areaName: "WindowArea", expirationTime: TimeSpan.FromSeconds(10));
                     }
                 }
                 s_isCheck = true;
                 s_countExpert = countExpert;
                 s_countSupport = countSupport;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
                 await Task.Delay(5000);
                 await SubscribeGetCountMessagesAsync();
             }
@@ -100,22 +98,26 @@ namespace TrueSkills
         {
             string url = string.Empty;
             var rooms = await GetRoomsAsync();
-            if (room == Room.Expert)
+            if (rooms!=null)
             {
-                url = Url.s_chatUrl + $"/{rooms.Rooms.Expert}";
+                if (room == Room.Expert)
+                {
+                    url = Url.s_chatUrl + $"/{rooms.Rooms.Expert}";
+                }
+                else if (room == Room.Support)
+                {
+                    url = Url.s_chatUrl + $"/{rooms.Rooms.Support}";
+                }
+                if (operation == Operation.Get)
+                {
+                    url += "/get";
+                }
+                else if (operation == Operation.Send)
+                {
+                    url += "/send";
+                }
             }
-            else if (room == Room.Support)
-            {
-                url = Url.s_chatUrl + $"/{rooms.Rooms.Support}";
-            }
-            if (operation == Operation.Get)
-            {
-                url += "/get";
-            }
-            else if (operation == Operation.Send)
-            {
-                url += "/send";
-            }
+           
             return url;
         }
 
@@ -126,65 +128,83 @@ namespace TrueSkills
         }
 
 
-        public static bool LostRtmpCamera;
-        public static bool LostRtmpScreen;
+        public static bool lostRtmpCamera;
+        public static bool lostRtmpScreen;
 
         private static bool IsSome(string property)
         {
-            return s_frame.Content.ToString().Contains(property);
+            return frame.Content.ToString().Contains(property);
         }
-        static Rtmp Rtmp = new Rtmp();
+        private static Rtmp rtmp = new Rtmp();
+        public static StepAPI s_step;
         public static async Task SubscribeLoadStepAsync()
         {
             if (App.IsNetwork)
             {
-                if (s_currentParticipent != null)
+                if (currentParticipent != null)
                 {
                     try
                     {
                         var response = await GetStep();
+                        s_step = response;
                         var date = Convert.ToDateTime(response.End);
                         var nowResponse = await SupportingMethods.GetWebRequest<NowAPI>(Url.s_nowUrl, true);
                         var now = Convert.ToDateTime(nowResponse.Time);
                         if (now > date || date.TimeOfDay.TotalSeconds <= 0)
                         {
-                            Time = null;
+                            time = null;
                         }
                         else
                         {
                             var substract = (date - now).Duration();
-                            Time = substract;
+                            time = substract;
                         }
 
-                        if (IsAuthDevice && LostRtmpScreen)
+                        if (isAuthDevice && lostRtmpScreen)
                         {
-                            Rtmp.RtmpScreen(GetStream().Result.Screen);
+                            try
+                            {
+                                rtmp.RtmpScreen(GetStream().Result.Screen);
+
+                            }
+                            catch (Exception ex)
+                            {
+                                new MessageBoxWindow(ex.Message, GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+                            }
                         }
 
-                        if (IsAuthDevice && LostRtmpCamera)
+                        if (isAuthDevice && lostRtmpCamera)
                         {
-                            Rtmp.RtmpCamera(GetStream().Result.Camera);
+                            try
+                            {
+                                rtmp.RtmpCamera(GetStream().Result.Camera);
+
+                            }
+                            catch (Exception ex)
+                            {
+                                new MessageBoxWindow(ex.Message, GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+                            }
                         }
                         SearchBefore(response);
                         if (response.Step == Step.ExamHasStartedDocumentDisplayed)
                         {
-                            if (IsAuthDevice && !IsSome("DocumentsPage"))
+                            if (isAuthDevice && !IsSome("DocumentsPage"))
                             {
-                                s_frame.Navigate(new DocumentsPage());
+                                frame.Navigate(new DocumentsPage());
                             }
                         }
                         else if (response.Step == Step.ExamStartTaskDisplay)
                         {
-                            if (IsAuthDevice && !IsSome("TaskPage"))
+                            if (isAuthDevice && !IsSome("TaskPage"))
                             {
-                                s_frame.Navigate(new TaskPage());
+                                frame.Navigate(new TaskPage());
                             }
                         }
                         else if (response.Step == Step.ExamStartModuleUnderway)
                         {
-                            if (IsAuthDevice && !IsSome("VMPage"))
+                            if (isAuthDevice && !IsSome("VMPage"))
                             {
-                                s_frame.Navigate(new VMPage());
+                                frame.Navigate(new VMPage());
                             }
                         }
                         else if (response.Step == Step.ExamHasStartedModuleNotStarted)
@@ -203,12 +223,15 @@ namespace TrueSkills
                         ShowException(ex);
                     }
                 }
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
                 await Task.Delay(30000);
                 await SubscribeLoadStepAsync();
             }
         }
 
-        private static void CloseAllWindows()
+        public static void CloseAllWindows()
         {
             foreach (var window in App.Current.Windows)
             {
@@ -234,7 +257,7 @@ namespace TrueSkills
         }
         public static async Task<RoomAPI.Rootobject> GetRoomsAsync()
         {
-            if (s_currentParticipent == null)
+            if (currentParticipent == null)
                 return null;
             if (s_rooms == null)
                 s_rooms = await SupportingMethods.GetWebRequest<RoomAPI.Rootobject>(Url.s_chatUrl, true);
@@ -256,11 +279,10 @@ namespace TrueSkills
 
         public static void Exit()
         {
-            KioskModeAPI.Unlock();
+            Locker.Unlock();
             Process.GetCurrentProcess().Kill();
         }
-        public static string PathXaml;
-        public static string EnglishName;
+        public static string englishName;
         public static ResourceDictionary CurrentResource;
 
         public static string GetProperty(string property)
@@ -270,7 +292,7 @@ namespace TrueSkills
 
         public static List<int> GetCodesError()
         {
-            List<int> codes = new List<int>(7);
+            List<int> codes = new List<int>();
             foreach (var item in CurrentResource.Keys)
             {
                 if (item.ToString().Contains("a_Code"))
@@ -287,19 +309,28 @@ namespace TrueSkills
             if (ex.Error != null)
             {
                 var code = GetCodesError().FirstOrDefault(x => x == ex.Error.Code);
+                if (code == 2)
+                {
+                    return;
+                }
                 if (code != 0)
                 {
-                    MessageBox.Show($"{GetProperty($"a_Code{code}")}", $"{GetProperty("a_Error")}", MessageBoxButton.OK, MessageBoxImage.Error);
+                    new MessageBoxWindow(GetProperty($"a_Code{code}"), GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
                 }
                 else
                 {
-                    MessageBox.Show(ex.Message, $"{GetProperty("a_Error")}", MessageBoxButton.OK, MessageBoxImage.Error);
+                    new MessageBoxWindow(ex.Message, GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
                 }
+            }
+            else
+            {
+                new MessageBoxWindow(ex.Message, GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
             }
         }
 
         public static CultureInfo Language
         {
+
             get
             {
                 return Thread.CurrentThread.CurrentUICulture;
@@ -311,13 +342,11 @@ namespace TrueSkills
 
                 Thread.CurrentThread.CurrentUICulture = value;
 
-                ResourceDictionary dict = new ResourceDictionary
-                {
-                    Source = new Uri(string.Format($"{PathXaml}\\Languages\\Language.{value.Name}.xaml"), UriKind.RelativeOrAbsolute)
-                };
+                ResourceDictionary dict = new ResourceDictionary();
+                dict.Source = new Uri(string.Format("/Languages/Language.{0}.xaml", value.Name), UriKind.RelativeOrAbsolute);
                 CurrentResource = dict;
                 ResourceDictionary oldDict = (from d in Application.Current.Resources.MergedDictionaries
-                                              where d.Source != null && d.Source.OriginalString.Contains("Language")
+                                              where d.Source != null && d.Source.OriginalString == "/Languages/Language.ru-RU.xaml"
                                               select d).FirstOrDefault();
                 if (oldDict != null)
                 {
@@ -331,81 +360,5 @@ namespace TrueSkills
                 }
             }
         }
-
-        public static bool IsMoreMice()
-        {
-            ManagementObjectSearcher search = new ManagementObjectSearcher("SELECT * FROM Win32_PointingDevice");
-            int inputDeviceCount = search.Get().Count;
-            if (inputDeviceCount > 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public static void StartKiosk(IntPtr Handle)
-        {
-            KioskModeAPI.StartKioskMode(AllowedKeys, EscapeKeys, Handle);
-        }
-
-
-        private static VKey[] AllowedKeys = new VKey[] {
-            VKey.Q,
-            VKey.W,
-            VKey.E,
-            VKey.R,
-            VKey.T,
-            VKey.Y,
-            VKey.U,
-            VKey.I,
-            VKey.O,
-            VKey.P,
-            VKey.A,
-            VKey.S,
-            VKey.D,
-            VKey.F,
-            VKey.G,
-            VKey.H,
-            VKey.J,
-            VKey.K,
-            VKey.L,
-            VKey.Z,
-            VKey.X,
-            VKey.C,
-            VKey.V,
-            VKey.B,
-            VKey.N,
-            VKey.M,
-            VKey.Number0,
-            VKey.Number1,
-            VKey.Number2,
-            VKey.Number3,
-            VKey.Number4,
-            VKey.Number5,
-            VKey.Number6,
-            VKey.Number7,
-            VKey.Number8,
-            VKey.Number9,
-            VKey.Space,
-            VKey.LeftShift,
-            VKey.RightShift,
-            VKey.Back,
-            };
-
-        private static VKey[] EscapeKeys = new VKey[] {
-                VKey.Delete,
-                VKey.LeftControl,
-                VKey.RightControl,
-                VKey.RightMenu,
-                VKey.LeftMenu,
-                VKey.LeftWindows,
-                VKey.RightWindows,
-                VKey.Escape,
-                VKey.Menu,
-                VKey.Tab
-            };
     }
 }

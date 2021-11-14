@@ -1,0 +1,136 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:v="clr-namespace:System;assembly=mscorlib">
+
+    <!--All Window-->
+    <v:String x:Key="a_DemoExam">Demo Exam</v:String>
+    <v:String x:Key="a_Error">Error</v:String>
+    <v:String x:Key="a_Auth">Authorization required</v:String>
+    <v:String x:Key="a_Proceed">Proceed</v:String>
+    <v:String x:Key="a_Module1">Before the module</v:String>
+    <v:String x:Key="a_Module2">Module</v:String>
+    <v:String x:Key="a_NotificationTitle1">Notification</v:String>
+    <v:String x:Key="a_NotificationTitle2">Posts</v:String>
+    <v:String x:Key="a_NotificationSound">The sound spoken into the microphone is reproduced from the speaker.</v:String>
+    <v:String x:Key="a_NotificationChat1">You got a new message in the room with an expert, check the chat!</v:String>
+    <v:String x:Key="a_NotificationChat2">You received a new message in the room from those. help, check the chat!</v:String>
+    <v:String x:Key="a_Network">No Internet.</v:String>
+    <v:String x:Key="a_Step1">The exam has not yet begun.</v:String>
+    <v:String x:Key="a_Step2">Exam started, displaying documents.</v:String>
+    <v:String x:Key="a_Step3">The exam has started, the module has not started yet.</v:String>
+    <v:String x:Key="a_Step4">The exam has started, displaying the assignment.</v:String>
+    <v:String x:Key="a_Step5">The exam has begun, the module is in progress.</v:String>
+    <v:String x:Key="a_Step6">Exam finished.</v:String>
+    <v:String x:Key="a_Code1">Authorization data is incorrect.</v:String>
+    <v:String x:Key="a_Code2">Missing token</v:String>
+    <v:String x:Key="a_Code6">File not found</v:String>
+    <v:String x:Key="a_Code7">The identifier does not match the file</v:String>
+    <v:String x:Key="a_Code8">VM not found</v:String>
+    <v:String x:Key="a_Code9">VM not found</v:String>
+    <v:String x:Key="a_Code10">Room not found</v:String>
+    <v:String x:Key="a_Question">Question</v:String>
+    <v:String x:Key="a_ServerNetwork">Loss of connection on the server side</v:String>
+    <v:String x:Key="a_ClientNetwork">Loss of connection on the client side</v:String>
+    <!--All Window-->
+
+    <!--Launcher-->
+    <!--MainWindow-->
+    <v:String x:Key="lm_Title">TrueSkills</v:String>
+    <v:String x:Key="lm_DownloadingApp">Download the app</v:String>
+    <v:String x:Key="lm_LanguageTitle">Language</v:String>
+    <v:String x:Key="lm_ErrorZip">Archive error</v:String>
+    <v:String x:Key="lm_Ready">Start</v:String>
+    <v:String x:Key="lm_Support">Help</v:String>
+    <v:String x:Key="lm_Version">Version</v:String>
+    <!--Launcher-->
+    <!--MainWindow-->
+
+    <!--TrueSkills-->
+    <!--MainWindow-->
+    <v:String x:Key="tm_Title">Authorization</v:String>
+    <v:String x:Key="tm_LFM">Full name</v:String>
+    <v:String x:Key="tm_CodeExam">Exam code</v:String>
+    <v:String x:Key="tm_AuthorizationCommand">Authorization</v:String>
+    <v:String x:Key="tm_EmptyError">Empty value.</v:String>
+    <v:String x:Key="tm_NumberError">Numeric values ​​for this field are not valid.</v:String>
+    <v:String x:Key="tm_PunctuationError">Only Russian, Latin letters, as well as a space and a dash are available for input.</v:String>
+    <v:String x:Key="tm_RangeError">The number of characters for this field must be in the range 5-255.</v:String>
+    <v:String x:Key="tm_LatinOrNumberError">For this field, only Latin letters and numbers are possible.</v:String>
+    <v:String x:Key="tm_WhiteSpaceError">Spaces cannot be used for this field.</v:String>
+    <v:String x:Key="tm_RangeExamError">The number of characters for this field must be in the range 2-8.</v:String>
+    <!--MainWindow-->
+
+    <!--NavigationWindow-->
+    <v:String x:Key="nw_Title">Main window</v:String>
+    <!--NavigationWindow-->
+
+    <!--SettingsPage-->
+    <v:String x:Key="sp_Title">Specifications required for the exam</v:String>
+    <v:String x:Key="sp_Minimum">Minimum</v:String>
+    <v:String x:Key="sp_Your">Your</v:String>
+    <!--SettingsPage-->
+    <!--TrueSkills-->
+
+    <!--ReconnectionWindow-->
+    <v:String x:Key="rw_Title">Reconnection</v:String>
+    <v:String x:Key="rw_Reconnection">The connection to the server has been cut off, a reconnection is required.</v:String>
+    <v:String x:Key="rw_ReconnectionCommand">Reconnect</v:String>
+    <!--ReconnectionWindow-->
+
+    <!--MoveAwayWindow-->
+    <v:String x:Key="ma_Title">Move away</v:String>
+    <v:String x:Key="ma_Return">I'm back</v:String>
+    <!--MoveAwayWindow-->
+
+    <!--ExamEnd-->
+    <v:String x:Key="ee_Title">The exam is over</v:String>
+    <v:String x:Key="ee_End">The exam is over</v:String>
+    <v:String x:Key="ee_NewExam">New exam</v:String>
+    <!--ExamEnd-->
+
+
+    <!--DocumentsPage-->
+    <v:String x:Key="dp_SubmitText">I confirm that I have read this text</v:String>
+    <v:String x:Key="dp_Proceed">To continue, confirm that you have read the text</v:String>
+    <!--DocumentsPage-->
+
+
+    <!--DeviceCheckPage-->
+    <v:String x:Key="dc_Camera">Camera</v:String>
+    <v:String x:Key="dc_Microphone">Microphone</v:String>
+    <v:String x:Key="dc_OutputSound">Sound</v:String>
+    <v:String x:Key="dc_CameraHint">Select camera</v:String>
+    <v:String x:Key="dc_MicrophoneHint">Select microphone</v:String>
+    <v:String x:Key="dc_OutputSoundHint">Select sound</v:String>
+    <!--DeviceCheckPage-->
+
+
+    <!--ChatWindow-->
+    <v:String x:Key="cw_Title">Chat</v:String>
+    <v:String x:Key="cw_Content">Technical support</v:String>
+    <!--ChatWindow-->
+
+    <!--BeforeExam-->
+    <v:String x:Key="be_Title">Before the exam</v:String>
+    <!--BeforeExam-->
+
+    <!--MessageBoxWindow-->
+    <v:String x:Key="mb_Yes">Yes</v:String>
+    <v:String x:Key="mb_No">No</v:String>
+    <v:String x:Key="mb_Ok">Ok</v:String>
+    <!--MessageBoxWindow-->
+
+    <!--Headers-->
+    <!--DefaultHeader-->
+    <v:String x:Key="df_Days">Days</v:String>
+    <v:String x:Key="df_Hours">Hours</v:String>
+    <v:String x:Key="df_Minutes">Minutes</v:String>
+    <v:String x:Key="df_Seconds">Seconds</v:String>
+    <!--DefaultHeader-->
+    <!--VMHeader-->
+    <v:String x:Key="vm_MoveAway">Needs to move away</v:String>
+    <v:String x:Key="vm_ExamEnd">To finish</v:String>
+    <v:String x:Key="vm_SubmitEnd">Really finish the exam?</v:String>
+    <!--VMHeader-->
+    <!--Headers-->
+</ResourceDictionary>

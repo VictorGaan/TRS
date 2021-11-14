@@ -29,7 +29,15 @@ namespace TrueSkills.ViewModels
         }
         public MainWindowVM()
         {
-            TemporaryVariables.Language = new CultureInfo(TemporaryVariables.EnglishName);
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                TemporaryVariables.Language = new CultureInfo(args[1]);
+            }
+            else
+            {
+                TemporaryVariables.Language = new CultureInfo("ru-RU");
+            }
             _participent = new ParticipentModel();
             var canExecute = this.WhenAnyValue(x => x._participent.FullName, x => x._participent.Exam,
                 (fullName, exam) =>

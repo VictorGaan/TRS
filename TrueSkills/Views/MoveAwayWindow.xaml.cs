@@ -33,8 +33,20 @@ namespace TrueSkills.Views
             }
             catch (Exception ex)
             {
+                new MessageBoxWindow(ex.Message, TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+            }
+        }
 
-                MessageBox.Show(ex.Message, "Title", MessageBoxButton.OK, MessageBoxImage.Error);
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                if (e.ChangedButton == MouseButton.Left)
+                    DragMove();
+            }
+            catch
+            {
+                return;
             }
         }
     }

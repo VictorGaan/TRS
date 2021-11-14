@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Windows;
-using System.Linq;
-using System.IO;
-using System.Windows.Threading;
-using TrueSkills.APIs;
-using System.Threading.Tasks;
-using TrueSkills.Interfaces;
-using System.Diagnostics;
-using System.Threading;
 using System.Net.NetworkInformation;
-using Microsoft.Win32;
-using System.Runtime.InteropServices;
+using System.Windows;
+using TrueSkills.Views;
 
 namespace TrueSkills
 {
@@ -22,23 +12,31 @@ namespace TrueSkills
     public partial class App : Application
     {
 
-        public static bool IsNetwork;
+        public static bool IsNetwork { get; set; }
         public App()
         {
-            string[] args = File.ReadAllText("Args.txt").Split('&');
-            if (args.Length > 1)
-            {
-                TemporaryVariables.PathXaml = args[1];
-                TemporaryVariables.EnglishName = args[0];
-            }
+            ServerNetwork serverNetwork = new ServerNetwork();
+            serverNetwork.ServerNetworkAvailabilityChanged += ServerNetwork_ServerNetworkAvailabilityChanged;
             IsNetwork = NetworkInterface.GetIsNetworkAvailable();
             NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
             Exit += App_Exit;
         }
 
+        private void ServerNetwork_ServerNetworkAvailabilityChanged(bool isWork)
+        {
+            if (!isWork)
+            {
+                new MessageBoxWindow(TemporaryVariables.GetProperty("a_ServerNetwork"), TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+            }
+        }
+
         private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
             IsNetwork = e.IsAvailable;
+            if (!IsNetwork)
+            {
+                new MessageBoxWindow(TemporaryVariables.GetProperty("a_ClientNetwork"), TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+            }
         }
         private void App_Exit(object sender, ExitEventArgs e)
         {

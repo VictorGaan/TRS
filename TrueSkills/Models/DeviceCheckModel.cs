@@ -4,7 +4,7 @@ using AudioSwitcher.AudioApi.CoreAudio;
 using DotNetPusher.Encoders;
 using DotNetPusher.Pushers;
 using NAudio.Wave;
-using Notifications.Wpf.Core;
+using Notifications.Wpf;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ using System.Windows.Media.Imaging;
 using TrueSkills.APIs;
 using TrueSkills.Exceptions;
 using TrueSkills.Interfaces;
+using TrueSkills.Views;
 using static TrueSkills.APIs.DocumentAPI;
 
 namespace TrueSkills.Models
@@ -219,8 +220,8 @@ namespace TrueSkills.Models
             if (StartSound)
             {
                 StartAudio();
-                TemporaryVariables.GetManager().ShowAsync(
-                           new NotificationContent { Title = "Уведомление", Message = "Звук сказанный в микрофон воспроизводится из динамика.", Type = NotificationType.Information },
+                TemporaryVariables.GetManager().Show(
+                           new NotificationContent { Title = TemporaryVariables.GetProperty("a_NotificationTitle1"), Message = TemporaryVariables.GetProperty("a_NotificationSound"), Type = NotificationType.Information },
                            areaName: "WindowArea", expirationTime: TimeSpan.FromSeconds(10));
             }
             else
@@ -269,13 +270,20 @@ namespace TrueSkills.Models
         private void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
-            TemporaryVariables.VideoFrame = bitmap;
+            TemporaryVariables.videoFrame = bitmap;
             VideoSource = Convert(bitmap);
             if (TemporaryVariables.GetStream() != null)
             {
                 if (_isSendRtmp && TemporaryVariables.GetStream().Result.Camera != null)
                 {
-                    Rtmp.RtmpCamera(TemporaryVariables.GetStream().Result.Camera);
+                    try
+                    {
+                        Rtmp.RtmpCamera(TemporaryVariables.GetStream().Result.Camera);
+                    }
+                    catch (Exception ex)
+                    {
+                        new MessageBoxWindow(ex.Message, TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+                    }
                 }
             }
             _isSendRtmp = false;

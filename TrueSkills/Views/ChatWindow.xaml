@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrueSkills.Views"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="{DynamicResource cw_Title}" WindowStartupLocation="CenterScreen" Height="500" ResizeMode="NoResize" Width="300" FontFamily="Roboto">
     <Window.Resources>
@@ -53,6 +53,11 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox MaxLength="255" VerticalContentAlignment="Center" MaxHeight="80" Text="{Binding  Path=ChatModel.Message,UpdateSourceTrigger=PropertyChanged}" Background="{StaticResource BackColor}" FontSize="16" Foreground="{StaticResource ForeColor}" BorderBrush="{StaticResource ForeColor}" BorderThickness="1" Margin="5" TextWrapping="Wrap">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="PreviewKeyDown">
+                            <b:InvokeCommandAction PassEventArgsToCommand="True" Command="{Binding KeyDownEvent}"></b:InvokeCommandAction>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                     <TextBox.Style>
                         <Style TargetType="TextBox">
                             <Style.Resources>

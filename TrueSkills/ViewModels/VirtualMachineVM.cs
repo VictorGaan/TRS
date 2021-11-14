@@ -61,9 +61,8 @@ namespace TrueSkills.ViewModels
         {
             ReconnectingWindow reconnectingWindow = new ReconnectingWindow();
             reconnectingWindow.ShowDialog();
-            //GetVM();
-            TemporaryVariables.s_webView.Load(AddressVm);
-            TemporaryVariables.s_webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
+            TemporaryVariables.webView.Load(AddressVm);
+            TemporaryVariables.webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
 
         }
         public async Task GetVM()
@@ -76,11 +75,11 @@ namespace TrueSkills.ViewModels
         {
             if (App.IsNetwork)
             {
-                var content = TemporaryVariables.s_frame;
+                var content = TemporaryVariables.frame;
                 if (content != null)
                 {
                     SizeAPI body = new SizeAPI();
-                    body.Height = content.ActualHeight - 55;
+                    body.Height = content.ActualHeight + 75;
                     body.Width = content.ActualWidth;
                     try
                     {

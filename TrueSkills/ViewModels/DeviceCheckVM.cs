@@ -43,7 +43,7 @@ namespace TrueSkills.ViewModels
             {
                 if (response.Step == Step.ExamHasStartedDocumentDisplayed)
                 {
-                    TemporaryVariables.s_frame.Navigate(new DocumentsPage());
+                    TemporaryVariables.frame.Navigate(new DocumentsPage());
                 }
                 if (response.Step == Step.ExamHasStartedModuleNotStarted)
                 {
@@ -55,11 +55,11 @@ namespace TrueSkills.ViewModels
             {
                 if (response.Step == Step.ExamStartModuleUnderway)
                 {
-                    TemporaryVariables.s_frame.Navigate(new VMPage());
+                    TemporaryVariables.frame.Navigate(new VMPage());
                 }
                 if (response.Step == Step.ExamStartTaskDisplay)
                 {
-                    TemporaryVariables.s_frame.Navigate(new TaskPage());
+                    TemporaryVariables.frame.Navigate(new TaskPage());
                 }
                 if (response.Step == Step.ExamHasStartedModuleNotStarted)
                 {
@@ -67,7 +67,7 @@ namespace TrueSkills.ViewModels
                     beforeExamWindow.ShowDialog();
                 }
             }
-            TemporaryVariables.IsAuthDevice = true;
+            TemporaryVariables.isAuthDevice = true;
         }
     }
 
