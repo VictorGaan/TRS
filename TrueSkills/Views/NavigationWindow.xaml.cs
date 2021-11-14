@@ -24,12 +24,12 @@ namespace TrueSkills.Views
             InitializeComponent();
             TemporaryVariables.frame = MainFrame;
             DataContext = new NavigationVM();
-            //CheckMonitors();
-            //ProcessModule objCurrentModule = Process.GetCurrentProcess().MainModule;
-            //objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
-            //ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
-            //Locker.Lock();
-            this.Closed += (o, e) => { UnhookWindowsHookEx(ptrHook); Locker.Unlock();};
+            CheckMonitors();
+            ProcessModule objCurrentModule = Process.GetCurrentProcess().MainModule;
+            objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
+            ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
+            Locker.Lock();
+            this.Closed += (o, e) => { UnhookWindowsHookEx(ptrHook); Locker.Unlock(); };
         }
         private void CheckMonitors()
         {
@@ -88,7 +88,7 @@ namespace TrueSkills.Views
                     || objKeyInfo.key == Keys.LWin
                     || objKeyInfo.key == Keys.Tab
                     || objKeyInfo.key == Keys.Escape
-                    ||objKeyInfo.key==Keys.PrintScreen)
+                    || objKeyInfo.key == Keys.PrintScreen)
                 {
                     return (IntPtr)1; // if 0 is returned then All the above keys will be enabled
                 }

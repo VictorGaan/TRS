@@ -52,9 +52,6 @@
     <Reference Include="AudioSwitcher.AudioApi.CoreAudio">
       <HintPath>..\..\..\..\.nuget\packages\audioswitcher.audioapi.coreaudio\3.0.0.1\lib\net40\AudioSwitcher.AudioApi.CoreAudio.dll</HintPath>
     </Reference>
-    <Reference Include="DockFloat">
-      <HintPath>bin\Release\netcoreapp3.1\DockFloat.dll</HintPath>
-    </Reference>
     <Reference Include="Notifications.Wpf">
       <HintPath>bin\Release\netcoreapp3.1\Notifications.Wpf.dll</HintPath>
     </Reference>

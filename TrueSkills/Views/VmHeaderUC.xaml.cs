@@ -26,7 +26,7 @@ namespace TrueSkills.Views
         {
             InitializeComponent();
             DateGrid.Visibility = Visibility.Collapsed;
-             _timer = new DispatcherTimer()
+            _timer = new DispatcherTimer()
             {
                 Interval = TimeSpan.FromMilliseconds(1)
             };
@@ -34,7 +34,6 @@ namespace TrueSkills.Views
             _timer.Start();
             DataContext = this;
         }
-
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (!Topmost)
@@ -66,7 +65,7 @@ namespace TrueSkills.Views
                     {
                         TbDays.Visibility = Visibility.Visible;
                     }
-                    if (TemporaryVariables.time.Value.Hours <= 0)
+                    if (TemporaryVariables.time.Value.Hours <= 0 && TemporaryVariables.time.Value.Days <= 0)
                     {
                         TbHours.Visibility = Visibility.Collapsed;
                     }
@@ -74,7 +73,7 @@ namespace TrueSkills.Views
                     {
                         TbHours.Visibility = Visibility.Visible;
                     }
-                    if (TemporaryVariables.time.Value.Minutes <= 0)
+                    if (TemporaryVariables.time.Value.Minutes <= 0 && TemporaryVariables.time.Value.Hours <= 0 && TemporaryVariables.time.Value.Days <= 0)
                     {
                         TbMinutes.Visibility = Visibility.Collapsed;
                     }
@@ -82,9 +81,10 @@ namespace TrueSkills.Views
                     {
                         TbMinutes.Visibility = Visibility.Visible;
                     }
-                    if (TemporaryVariables.time.Value.Seconds <= 0)
+                    if (TemporaryVariables.time.Value.Seconds <= 0 && TemporaryVariables.time.Value.Minutes <= 0 && TemporaryVariables.time.Value.Hours <= 0 && TemporaryVariables.time.Value.Days <= 0)
                     {
                         TbSeconds.Visibility = Visibility.Collapsed;
+                        TemporaryVariables.time = null;
                     }
                     else
                     {

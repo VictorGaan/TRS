@@ -60,6 +60,7 @@ namespace TrueSkills.Views
                             TbModule.Text = TemporaryVariables.GetProperty("a_Module2");
                             break;
                     }
+
                     if (TemporaryVariables.time.Value.Days <= 0)
                     {
                         TbDays.Visibility = Visibility.Collapsed;
@@ -68,7 +69,7 @@ namespace TrueSkills.Views
                     {
                         TbDays.Visibility = Visibility.Visible;
                     }
-                    if (TemporaryVariables.time.Value.Hours <= 0)
+                    if (TemporaryVariables.time.Value.Hours <= 0 && TemporaryVariables.time.Value.Days <= 0)
                     {
                         TbHours.Visibility = Visibility.Collapsed;
                     }
@@ -76,7 +77,7 @@ namespace TrueSkills.Views
                     {
                         TbHours.Visibility = Visibility.Visible;
                     }
-                    if (TemporaryVariables.time.Value.Minutes <= 0)
+                    if (TemporaryVariables.time.Value.Minutes <= 0 && TemporaryVariables.time.Value.Hours <= 0 && TemporaryVariables.time.Value.Days <= 0)
                     {
                         TbMinutes.Visibility = Visibility.Collapsed;
                     }
@@ -84,9 +85,10 @@ namespace TrueSkills.Views
                     {
                         TbMinutes.Visibility = Visibility.Visible;
                     }
-                    if (TemporaryVariables.time.Value.Seconds <= 0)
+                    if (TemporaryVariables.time.Value.Seconds <= 0 && TemporaryVariables.time.Value.Hours <= 0 && TemporaryVariables.time.Value.Days <= 0)
                     {
                         TbSeconds.Visibility = Visibility.Collapsed;
+                        TemporaryVariables.time = null;
                     }
                     else
                     {
