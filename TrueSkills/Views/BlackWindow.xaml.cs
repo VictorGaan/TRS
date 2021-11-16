@@ -29,6 +29,7 @@ namespace TrueSkills.Views
             WindowStyle = WindowStyle.None;
             this.Height +=1000;
             this.Width +=1000;
+            Topmost = false;
             new Locker();
         }
     }

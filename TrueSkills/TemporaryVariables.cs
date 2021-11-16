@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -98,7 +99,7 @@ namespace TrueSkills
         {
             string url = string.Empty;
             var rooms = await GetRoomsAsync();
-            if (rooms!=null)
+            if (rooms != null)
             {
                 if (room == Room.Expert)
                 {
@@ -117,7 +118,7 @@ namespace TrueSkills
                     url += "/send";
                 }
             }
-           
+
             return url;
         }
 
@@ -303,6 +304,29 @@ namespace TrueSkills
             return codes;
         }
 
+        public static void Restart()
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo()
+                {
+                    WorkingDirectory = Environment.CurrentDirectory,
+                    FileName = "dotnet",
+                    Arguments = $"TrueSkills.dll {TemporaryVariables.Language.Name}",
+                    Verb = "runas",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+                Process.Start(startInfo);
+            }
+            catch
+            {
+                return;
+            }
+            Application.Current.Shutdown();
+        }
 
         public static void ShowException(CodeException ex)
         {
@@ -311,6 +335,19 @@ namespace TrueSkills
                 var code = GetCodesError().FirstOrDefault(x => x == ex.Error.Code);
                 if (code == 2)
                 {
+                    bool isLoseToken = false;
+                    foreach (var window in App.Current.Windows)
+                    {
+                        if (window.GetType() == typeof(MainWindow))
+                        {
+                            isLoseToken = true;
+                            break;
+                        }
+                    }
+                    if (!isLoseToken)
+                    {
+                        Restart();
+                    }
                     return;
                 }
                 if (code != 0)

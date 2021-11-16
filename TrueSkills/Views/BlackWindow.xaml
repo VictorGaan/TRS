@@ -6,5 +6,5 @@
         xmlns:local="clr-namespace:TrueSkills.Views"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="BlackWindow" Background="Black" Width="1196" Height="880"  WindowStartupLocation="Manual" Loaded="Window_Loaded">
+        Title="BlackWindow" Background="Black" Width="1196" Height="880" WindowStyle="None" WindowStartupLocation="Manual" Loaded="Window_Loaded">
 </Window>

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -23,7 +24,7 @@ namespace TrueSkills.Views
     /// <summary>
     /// Логика взаимодействия для DefaultHeaderUC.xaml
     /// </summary>
-    public partial class DefaultHeaderUC : UserControl
+    public partial class DefaultHeaderUC : System.Windows.Controls.UserControl
     {
         public Visibility VisibilityStudent { get; set; }
         public Visibility VisibilityDate { get; set; }
@@ -43,6 +44,7 @@ namespace TrueSkills.Views
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            TbLanguage.Text = GetInputLanguage();
             if (TemporaryVariables.time != null)
             {
                 TbTime.Text = TemporaryVariables.time.ToString();
@@ -101,6 +103,11 @@ namespace TrueSkills.Views
                     VisibilityDate = Visibility.Collapsed;
                 }
             }
+        }
+
+        private string GetInputLanguage()
+        {
+            return InputLanguage.CurrentInputLanguage.Culture.TwoLetterISOLanguageName.ToUpper();
         }
 
         private void Logout_MouseDown(object sender, MouseButtonEventArgs e)

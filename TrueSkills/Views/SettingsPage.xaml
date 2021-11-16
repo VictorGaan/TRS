@@ -13,221 +13,219 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer>
-            <Grid Name="MyGrid" Grid.RowSpan="2" Visibility="{Binding Specification.VisibilityGrid}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock  Style="{StaticResource headerSetting}" Text="{DynamicResource sp_Title}"></TextBlock>
-                <Border Grid.Row="1" Style="{StaticResource defaultBorder}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <!--Cells-->
-                        <Border Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="1" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="2" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="3" Style="{StaticResource defaultBorder}"></Border>
+        <Grid Name="MyGrid" Grid.RowSpan="2" Visibility="{Binding Specification.VisibilityGrid}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock  Style="{StaticResource headerSetting}" Text="{DynamicResource sp_Title}"></TextBlock>
+            <Border Grid.Row="1" Style="{StaticResource defaultBorder}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <!--Cells-->
+                    <Border Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="1" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="2" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="3" Style="{StaticResource defaultBorder}"></Border>
 
-                        <Border Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
 
-                        <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="1" Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="1" Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="1" Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="1" Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
 
-                        <Border Grid.Column="2" Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="2" Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="2" Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="2" Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="2" Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="2" Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="2" Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="2" Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="2" Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="2" Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
 
-                        <Border Grid.Column="3" Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="3" Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
-                        <Border Grid.Column="3" Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
-                        <!--Cells-->
-                        <TextBlock Grid.Column="1" Text="{DynamicResource sp_Minimum}" Style="{StaticResource tableText}"></TextBlock>
-                        <TextBlock Grid.Column="2" HorizontalAlignment="Center" Text="{DynamicResource sp_Your}" Style="{StaticResource tableText}"></TextBlock>
-                        <TextBlock Grid.Row="1" Style="{StaticResource tableText}">CPU</TextBlock>
-                        <TextBlock Grid.Row="2" Style="{StaticResource tableText}">FreeSpace</TextBlock>
-                        <TextBlock Grid.Row="3" Style="{StaticResource tableText}">RAM</TextBlock>
-                        <TextBlock Grid.Row="4" Style="{StaticResource tableText}">Internet</TextBlock>
-                        <TextBlock Grid.Row="5" Style="{StaticResource tableText}">Monitors</TextBlock>
-                        <!--MinParams-->
-                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Specification.ServerSpecificationPc.Min.CPU.Name}" Style="{StaticResource tableText}"></TextBlock>
-                        <TextBlock Grid.Column="1" Grid.Row="2" Style="{StaticResource tableText}">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="Specification.ServerSpecificationPc.Min.FreeSpace.Value"></Binding>
-                                    <Binding Path="Specification.ServerSpecificationPc.Min.FreeSpace.Measurement"></Binding>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <TextBlock Grid.Column="1" Grid.Row="3" Style="{StaticResource tableText}">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="Specification.ServerSpecificationPc.Min.RAM.Value"></Binding>
-                                    <Binding Path="Specification.ServerSpecificationPc.Min.RAM.Measurement"></Binding>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <TextBlock Grid.Column="1" Grid.Row="4" Style="{StaticResource tableText}">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="Specification.ServerSpecificationPc.Min.Internet.Value"></Binding>
-                                    <Binding Path="Specification.ServerSpecificationPc.Min.Internet.Measurement"></Binding>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <ListBox HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding Specification.ServerSpecificationPc.Min.Monitors}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock TextWrapping="Wrap"  Style="{StaticResource tableText}" Text="{Binding Measurement}"></TextBlock>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <!--MinParams-->
+                    <Border Grid.Column="3" Grid.Row="1" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="3" Grid.Row="3" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource defaultBorder}"></Border>
+                    <Border Grid.Column="3" Grid.Row="5" Style="{StaticResource defaultBorder}"></Border>
+                    <!--Cells-->
+                    <TextBlock Grid.Column="1" Text="{DynamicResource sp_Minimum}" Style="{StaticResource tableText}"></TextBlock>
+                    <TextBlock Grid.Column="2" HorizontalAlignment="Center" Text="{DynamicResource sp_Your}" Style="{StaticResource tableText}"></TextBlock>
+                    <TextBlock Grid.Row="1" Style="{StaticResource tableText}">CPU</TextBlock>
+                    <TextBlock Grid.Row="2" Style="{StaticResource tableText}">FreeSpace</TextBlock>
+                    <TextBlock Grid.Row="3" Style="{StaticResource tableText}">RAM</TextBlock>
+                    <TextBlock Grid.Row="4" Style="{StaticResource tableText}">Internet</TextBlock>
+                    <TextBlock Grid.Row="5" Style="{StaticResource tableText}">Monitors</TextBlock>
+                    <!--MinParams-->
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Specification.ServerSpecificationPc.Min.CPU.Name}" Style="{StaticResource tableText}"></TextBlock>
+                    <TextBlock Grid.Column="1" Grid.Row="2" Style="{StaticResource tableText}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="Specification.ServerSpecificationPc.Min.FreeSpace.Value"></Binding>
+                                <Binding Path="Specification.ServerSpecificationPc.Min.FreeSpace.Measurement"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Column="1" Grid.Row="3" Style="{StaticResource tableText}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="Specification.ServerSpecificationPc.Min.RAM.Value"></Binding>
+                                <Binding Path="Specification.ServerSpecificationPc.Min.RAM.Measurement"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Column="1" Grid.Row="4" Style="{StaticResource tableText}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="Specification.ServerSpecificationPc.Min.Internet.Value"></Binding>
+                                <Binding Path="Specification.ServerSpecificationPc.Min.Internet.Measurement"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <ListBox HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding Specification.ServerSpecificationPc.Min.Monitors}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap"  Style="{StaticResource tableText}" Text="{Binding Measurement}"></TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <!--MinParams-->
 
-                        <!--ThisPCParams-->
-                        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Specification.SpecificationPc.CPU.Name}" Style="{StaticResource tableText}"></TextBlock>
-                        <TextBlock Grid.Column="2" Grid.Row="2" Style="{StaticResource tableText}">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="Specification.SpecificationPc.FreeSpace.Value"></Binding>
-                                    <Binding Path="Specification.SpecificationPc.FreeSpace.Measurement"></Binding>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <TextBlock Grid.Column="2" Grid.Row="3" Style="{StaticResource tableText}">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="Specification.SpecificationPc.RAM.Value"></Binding>
-                                    <Binding Path="Specification.SpecificationPc.RAM.Measurement"></Binding>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <TextBlock Grid.Column="2" Grid.Row="4" Style="{StaticResource tableText}">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="Specification.SpecificationPc.Internet.Value"></Binding>
-                                    <Binding Path="Specification.SpecificationPc.Internet.Measurement"></Binding>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <ListBox HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Grid.Column="2" Grid.Row="5" ItemsSource="{Binding Specification.SpecificationPc.Monitors}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock TextWrapping="Wrap"  Style="{StaticResource tableText}" Text="{Binding Measurement}"></TextBlock>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <!--ThisPCParams-->
-                        <Image Grid.Column="3" Margin="10" Grid.Row="1" Height="30" Width="30">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.CPU}" Value="NotFit">
-                                            <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.CPU}" Value="Fit">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.CPU}" Value="NotDetermined">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <Image Grid.Column="3" Margin="10" Grid.Row="2" Height="30" Width="30">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.FreeSpace}" Value="NotFit">
-                                            <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.FreeSpace}" Value="Fit">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.FreeSpace}" Value="NotDetermined">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <Image Grid.Column="3" Margin="10" Grid.Row="3" Height="30" Width="30">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.RAM}" Value="NotFit">
-                                            <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.RAM}" Value="Fit">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.RAM}" Value="NotDetermined">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <Image Grid.Column="3" Margin="10" Grid.Row="4" Height="30" Width="30">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.Internet}" Value="NotFit">
-                                            <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.Internet}" Value="Fit">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.Internet}" Value="NotDetermined">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <Image Grid.Column="3" Margin="10" Grid.Row="5" Height="30" Width="30">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Specification.IsFitMonitors}" Value="False">
-                                            <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Specification.IsFitMonitors}" Value="True">
-                                            <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </Grid>
-                </Border>
-            </Grid>
-        </ScrollViewer>
+                    <!--ThisPCParams-->
+                    <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Specification.SpecificationPc.CPU.Name}" Style="{StaticResource tableText}"></TextBlock>
+                    <TextBlock Grid.Column="2" Grid.Row="2" Style="{StaticResource tableText}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="Specification.SpecificationPc.FreeSpace.Value"></Binding>
+                                <Binding Path="Specification.SpecificationPc.FreeSpace.Measurement"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Column="2" Grid.Row="3" Style="{StaticResource tableText}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="Specification.SpecificationPc.RAM.Value"></Binding>
+                                <Binding Path="Specification.SpecificationPc.RAM.Measurement"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Column="2" Grid.Row="4" Style="{StaticResource tableText}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="Specification.SpecificationPc.Internet.Value"></Binding>
+                                <Binding Path="Specification.SpecificationPc.Internet.Measurement"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <ListBox HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Grid.Column="2" Grid.Row="5" ItemsSource="{Binding Specification.SpecificationPc.Monitors}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap"  Style="{StaticResource tableText}" Text="{Binding Measurement}"></TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <!--ThisPCParams-->
+                    <Image Grid.Column="3" Margin="10" Grid.Row="1" Height="30" Width="30">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.CPU}" Value="NotFit">
+                                        <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.CPU}" Value="Fit">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.CPU}" Value="NotDetermined">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Image Grid.Column="3" Margin="10" Grid.Row="2" Height="30" Width="30">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.FreeSpace}" Value="NotFit">
+                                        <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.FreeSpace}" Value="Fit">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.FreeSpace}" Value="NotDetermined">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Image Grid.Column="3" Margin="10" Grid.Row="3" Height="30" Width="30">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.RAM}" Value="NotFit">
+                                        <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.RAM}" Value="Fit">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.RAM}" Value="NotDetermined">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Image Grid.Column="3" Margin="10" Grid.Row="4" Height="30" Width="30">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.Internet}" Value="NotFit">
+                                        <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.Internet}" Value="Fit">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.ServerSpecificationPc.Status.Internet}" Value="NotDetermined">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Image Grid.Column="3" Margin="10" Grid.Row="5" Height="30" Width="30">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Specification.IsFitMonitors}" Value="False">
+                                        <Setter Property="Source" Value="/Assets/Warning.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Specification.IsFitMonitors}" Value="True">
+                                        <Setter Property="Source" Value="/Assets/Ok.png"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Grid>
+            </Border>
+        </Grid>
         <Button Content="{DynamicResource a_Proceed}" Grid.Row="1" Margin="10" Style="{StaticResource pushButton}" IsEnabled="{Binding Specification.IsEnabled}" Cursor="Hand" Command="{Binding ProceedCommand}"></Button>
     </Grid>
 </Page>

@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using TrueSkills.APIs;
 using TrueSkills.Exceptions;
 using TrueSkills.Interfaces;
+using TrueSkills.Models;
 using TrueSkills.Views;
 namespace TrueSkills.ViewModels
 {
@@ -61,12 +62,17 @@ namespace TrueSkills.ViewModels
         {
             ReconnectingWindow reconnectingWindow = new ReconnectingWindow();
             reconnectingWindow.ShowDialog();
-            TemporaryVariables.webView.Load(AddressVm);
-            TemporaryVariables.webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
-
+            Reload();
         }
+        public void Reload()
+        {
+            TemporaryVariables.webView.Load(AddressVm);
+        }
+
         public async Task GetVM()
         {
+            TemporaryVariables.webView.JsDialogHandler = new JsDialogHandler(this);
+            TemporaryVariables.webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
             await SetSize();
             await GetAddressAsync();
         }

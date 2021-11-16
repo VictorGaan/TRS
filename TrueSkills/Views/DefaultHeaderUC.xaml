@@ -14,6 +14,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock Style="{DynamicResource tsTextBlock}">TS</TextBlock>
         <TextBlock Style="{DynamicResource demoTextBlock}" Grid.Column="1" Text="{DynamicResource a_DemoExam}"></TextBlock>
@@ -45,8 +46,9 @@
                 </TextBlock.Text>
             </TextBlock>
         </Grid>
-        <Image Cursor="Hand" Style="{DynamicResource defaultImage}" Visibility="{Binding VisibilityStudent}" Source="/Assets/Student.png" Grid.Column="3" Name="ImgStudent" MouseDown="ImgStudent_MouseDown"></Image>
-        <Image Cursor="Hand" Style="{DynamicResource defaultImage}" Source="/Assets/Agent.png" Grid.Column="4" Name="ImgAgent" MouseDown="ImgAgent_MouseDown"></Image>
-        <Image Cursor="Hand" Style="{DynamicResource defaultImage}"  MouseDown="Logout_MouseDown" Visibility="{Binding VisibilityLogout}" Source="/Assets/Logout.png" Grid.Column="5"></Image>
+        <TextBlock Grid.Column="3" Margin="5" FontWeight="Bold" FontSize="15" Style="{DynamicResource someText}" Name="TbLanguage"></TextBlock>
+        <Image Cursor="Hand" Style="{DynamicResource defaultImage}" Visibility="{Binding VisibilityStudent}" Source="/Assets/Student.png" Grid.Column="4" Name="ImgStudent" MouseDown="ImgStudent_MouseDown"></Image>
+        <Image Cursor="Hand" Style="{DynamicResource defaultImage}" Source="/Assets/Agent.png" Grid.Column="5" Name="ImgAgent" MouseDown="ImgAgent_MouseDown"></Image>
+        <Image Cursor="Hand" Style="{DynamicResource defaultImage}"  MouseDown="Logout_MouseDown" Visibility="{Binding VisibilityLogout}" Source="/Assets/Logout.png" Grid.Column="6"></Image>
     </Grid>
 </UserControl>

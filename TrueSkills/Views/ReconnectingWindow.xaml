@@ -15,7 +15,7 @@
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Style="{StaticResource headerSetting}" FontSize="14" Text="{DynamicResource rw_Reconnection}" Margin="5"></TextBlock>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <controls:WindowsProgressRing Name="Ring" Visibility="Collapsed" Height="50" Width="50" Items="10"  Speed="0:0:2.5" Foreground="{StaticResource HeaderBackColor}"></controls:WindowsProgressRing>
+                <controls:WindowsProgressRing Margin="5" Name="Ring" Visibility="Collapsed" Height="50" Width="50" Items="10"  Speed="0:0:2.5" Foreground="{StaticResource HeaderBackColor}"></controls:WindowsProgressRing>
                 <Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click" Width="Auto" Content="{DynamicResource rw_ReconnectionCommand}" Style="{StaticResource pushButton}" Margin="5"></Button>
             </StackPanel>
         </StackPanel>

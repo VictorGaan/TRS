@@ -26,7 +26,11 @@ namespace TrueSkills
         {
             if (!isWork)
             {
-                new MessageBoxWindow(TemporaryVariables.GetProperty("a_ServerNetwork"), TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+                Current.Dispatcher.Invoke(() =>
+                {
+                    new MessageBoxWindow(TemporaryVariables.GetProperty("a_ServerNetwork"), TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+                });
+
             }
         }
 
@@ -35,7 +39,10 @@ namespace TrueSkills
             IsNetwork = e.IsAvailable;
             if (!IsNetwork)
             {
-                new MessageBoxWindow(TemporaryVariables.GetProperty("a_ClientNetwork"), TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+                Current.Dispatcher.Invoke(() =>
+                {
+                    new MessageBoxWindow(TemporaryVariables.GetProperty("a_ClientNetwork"), TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
+                });
             }
         }
         private void App_Exit(object sender, ExitEventArgs e)

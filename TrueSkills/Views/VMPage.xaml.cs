@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using TrueSkills.ViewModels;
 using CefSharp;
+using System.Windows;
 
 namespace TrueSkills.Views
 {
@@ -16,7 +17,6 @@ namespace TrueSkills.Views
             InitializeComponent();
             TemporaryVariables.webView = webView;
             DataContext = new VirtualMachineVM();
-            webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
         }
     }
 }

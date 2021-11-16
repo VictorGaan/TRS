@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:TrueSkills.Views" 
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:notifications="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
-        Title="{DynamicResource nw_Title}"  Width="1196" Height="880" ResizeMode="NoResize" WindowStyle="None" WindowState="Maximized" WindowStartupLocation="CenterScreen" Style="{StaticResource defaultNavWindow}">
+        Title="{DynamicResource nw_Title}" AllowsTransparency="True" Width="1196" Height="880" ResizeMode="NoResize" WindowStyle="None" WindowState="Maximized" WindowStartupLocation="CenterScreen" Style="{StaticResource defaultNavWindow}">
     <Grid Background="{StaticResource BackColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding HeightContent}"/>

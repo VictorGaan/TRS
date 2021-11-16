@@ -21,20 +21,45 @@ namespace TrueSkills.Views
         public ReconnectingWindow()
         {
             InitializeComponent();
+            ServerNetwork serverNetwork = new ServerNetwork();
+            serverNetwork.ServerNetworkAvailabilityChanged += ServerNetwork_ServerNetworkAvailabilityChanged;
             NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
+        }
+        private bool _isWork;
+        private void ServerNetwork_ServerNetworkAvailabilityChanged(bool isWork)
+        {
+            _isWork = isWork;
+            if (_isWork && _isAvailable)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Close();
+                });
+
+            }
         }
 
         private bool _isAvailable;
         void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
             _isAvailable = e.IsAvailable;
+            if (_isAvailable && _isWork)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Close();
+                });
+            }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Ring.Visibility = Visibility.Visible;
             if (_isAvailable)
             {
-                Close();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Close();
+                });
             }
         }
 
