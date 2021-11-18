@@ -122,6 +122,18 @@ namespace TrueSkills
             return url;
         }
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetDC(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        private static extern bool ReleaseDC(IntPtr hWnd, IntPtr hdc);
+        [DllImport("gdi32.dll")]
+        private static extern int GetDeviceCaps(IntPtr hdc, int index);
+
+        public static int RefreshFrequency()
+        {
+            var hDCScreen = GetDC(IntPtr.Zero);
+            return GetDeviceCaps(hDCScreen, 116);
+        }
 
         public static async Task<StepAPI> GetStep()
         {

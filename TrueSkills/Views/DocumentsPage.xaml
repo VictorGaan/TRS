@@ -9,6 +9,22 @@
       Title="DocumentsPage">
     <Page.Resources>
         <models:ImageConverter x:Key="imageConverter"></models:ImageConverter>
+        <Style x:Key="SeparatorStyle" 
+       TargetType="{x:Type Separator}"
+       BasedOn="{StaticResource {x:Type Separator}}">
+            <Setter Property="Background" Value="White"></Setter>
+            <!--<Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <TransformGroup.Children>
+                            <TransformCollection>
+                                <RotateTransform Angle="180"/>
+                            </TransformCollection>
+                        </TransformGroup.Children>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>-->
+        </Style>
     </Page.Resources>
     <Grid Margin="25" Name="MainGrid" Background="{StaticResource BackColor}">
         <Grid.RowDefinitions>
@@ -17,8 +33,57 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <wpf:PdfViewer PdfPath="{Binding DocumentModel.CurrentPdf.Address,UpdateSourceTrigger=PropertyChanged}"></wpf:PdfViewer>
-        <CheckBox IsChecked="{Binding DocumentModel.IsChecked}" IsEnabled="{Binding DocumentModel.IsEnabled}"  Command="{Binding CheckCommand}" Style="{StaticResource defaultCheckBox}" FontSize="18" Foreground="{StaticResource ForeColor}" Grid.Row="2" Content="{DynamicResource dp_SubmitText}"></CheckBox>
+        <!--<Grid Name="LinesGrid" Panel.ZIndex="2">-->
+            
+            <!--<Separator Margin="0 -735 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -730 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -725 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -720 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -715 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -710 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -705 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -700 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -360 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -340 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -320 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -300 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -280 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -260 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -240 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -220 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -200 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -180 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -160 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -140 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -120 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -100 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -80 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -60 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -40 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 -20 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 0 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 20 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 20 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 40 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 60 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 80 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 100 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 120 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 140 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 160 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 180 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 200 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 220 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 240 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 260 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 280 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 300 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 320 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 340 0 0" Style="{StaticResource SeparatorStyle}"></Separator>
+            <Separator Margin="0 360 0 0" Style="{StaticResource SeparatorStyle}"></Separator>-->
+        <!--</Grid>-->
+        <wpf:PdfViewer x:Name="pdfViewer" PdfPath="{Binding DocumentModel.CurrentPdf.Address,UpdateSourceTrigger=PropertyChanged}"></wpf:PdfViewer>
+        <CheckBox Cursor="Hand" IsChecked="{Binding DocumentModel.IsChecked}" IsEnabled="{Binding DocumentModel.IsEnabled}"  Command="{Binding CheckCommand}" Style="{StaticResource defaultCheckBox}" FontSize="18" Foreground="{StaticResource ForeColor}" Grid.Row="2" Content="{DynamicResource dp_SubmitText}"></CheckBox>
         <TextBlock Grid.Row="3" FontSize="14" Foreground="{StaticResource ForeColor}" Text="{DynamicResource dp_Proceed}"></TextBlock>
     </Grid>
 </Page>

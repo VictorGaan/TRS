@@ -16,7 +16,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-
+        
         <local:PdfViewer PdfPath="{Binding TaskModel.CurrentPdf.Address,UpdateSourceTrigger=PropertyChanged}"></local:PdfViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Visibility="{Binding TaskModel.VisibilityListBox}">
             <Button Style="{StaticResource navButton}" Content="&lt;" Command="{Binding NavCommandDown}"></Button>

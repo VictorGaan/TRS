@@ -33,7 +33,7 @@ namespace TrueSkills.Views
         public DefaultHeaderUC()
         {
             InitializeComponent();
-            VisibilityDate = Visibility.Collapsed;
+            DateGrid.Visibility = Visibility.Collapsed;
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += Timer_Tick;
@@ -96,11 +96,11 @@ namespace TrueSkills.Views
                     {
                         TbSeconds.Visibility = Visibility.Visible;
                     }
-                    VisibilityDate = Visibility.Visible;
+                    DateGrid.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    VisibilityDate = Visibility.Collapsed;
+                    DateGrid.Visibility = Visibility.Collapsed;
                 }
             }
         }

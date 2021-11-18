@@ -29,6 +29,7 @@ namespace TrueSkills.Views
             objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
             ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
             Locker.Lock();
+            Topmost = true;
             this.Closed += (o, e) => { UnhookWindowsHookEx(ptrHook); Locker.Unlock(); };
         }
         private void CheckMonitors()

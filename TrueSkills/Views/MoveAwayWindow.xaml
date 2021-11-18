@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrueSkills.Views"
         mc:Ignorable="d"
-        Title="{DynamicResource ma_Title}" MouseDown="Window_MouseDown" Height="275" Width="570" WindowStartupLocation="CenterScreen"  ResizeMode="NoResize" WindowStyle="None" FontFamily="Roboto">
+        Title="{DynamicResource ma_Title}" MouseDown="Window_MouseDown" Height="275" Width="650" WindowStartupLocation="CenterScreen"  ResizeMode="NoResize" WindowStyle="None" FontFamily="Roboto">
     <Grid Background="{StaticResource BackColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
