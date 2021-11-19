@@ -26,6 +26,28 @@ namespace TrueSkills.Views
         {
             InitializeComponent();
             DataContext = new TaskVM();
+            DispatcherTimer timer = new DispatcherTimer();
+            var ghz = TemporaryVariables.RefreshFrequency();
+            timer.Interval = TimeSpan.FromSeconds(1 / ghz);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if ((DataContext as DocumentsVM).DocumentModel.Pdfs.Any())
+            {
+                if (LinesGrid.Visibility == Visibility.Collapsed)
+                {
+                    LinesGrid.Visibility = Visibility.Visible;
+                    PdfViewer.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    LinesGrid.Visibility = Visibility.Collapsed;
+                    PdfViewer.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

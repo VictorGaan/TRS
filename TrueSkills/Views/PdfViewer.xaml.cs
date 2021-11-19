@@ -57,18 +57,7 @@ namespace TrueSkills.Views
         public PdfViewer()
         {
             InitializeComponent();
-            DispatcherTimer timer = new DispatcherTimer();
-            var ghz = TemporaryVariables.RefreshFrequency();
-            timer.Interval = TimeSpan.FromSeconds(1 / ghz);
-            timer.Tick += Timer_Tick;
-            timer.Start();
         }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            LinesGrid.Visibility = LinesGrid.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-        }
-
         private async static Task PdfToImages(PdfViewer pdfViewer, PdfDocument pdfDoc)
         {
             var items = pdfViewer.PagesContainer.Items;

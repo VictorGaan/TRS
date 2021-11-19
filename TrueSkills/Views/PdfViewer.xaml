@@ -7,28 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid Name="LinesGrid" Panel.ZIndex="2" Margin="0 0 20 0">
-            <Rectangle>
-                <Rectangle.Fill>
-                    <DrawingBrush Stretch="None" TileMode="Tile"
-              Viewport="0,0 20,10" ViewportUnits="Absolute">
-                        <DrawingBrush.Drawing>
-                            <GeometryDrawing>
-                                <GeometryDrawing.Geometry>
-                                    <GeometryGroup>
-                                        <LineGeometry StartPoint="0,0" EndPoint="20,10" />
-                                    </GeometryGroup>
-                                </GeometryDrawing.Geometry>
-                                <GeometryDrawing.Pen>
-                                    <Pen Thickness="1" Brush="White" />
-                                </GeometryDrawing.Pen>
-                            </GeometryDrawing>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Rectangle.Fill>
-            </Rectangle>
-        </Grid>
-        <ScrollViewer Panel.ZIndex="1" PanningMode="Both" Background="White">
+        <ScrollViewer PanningMode="Both" Background="White">
             <ItemsControl x:Name="PagesContainer"/>
         </ScrollViewer>
     </Grid>
