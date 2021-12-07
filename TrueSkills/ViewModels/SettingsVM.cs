@@ -25,8 +25,8 @@ namespace TrueSkills.ViewModels
             get => _specification;
             set => this.RaiseAndSetIfChanged(ref _specification, value);
         }
-        private Rootobject _documents;
-        public Rootobject Documents
+        private List<File> _documents;
+        public List<File> Documents
         {
             get => _documents;
             set => this.RaiseAndSetIfChanged(ref _documents, value);
@@ -46,7 +46,7 @@ namespace TrueSkills.ViewModels
             {
                 try
                 {
-                    Documents = await SupportingMethods.GetWebRequest<Rootobject>(Url.s_documentUrl, true);
+                    Documents = await SupportingMethods.GetWebRequest<List<File>>(Url.s_documentUrl, true);
                 }
                 catch (CodeException ex)
                 {
@@ -65,7 +65,7 @@ namespace TrueSkills.ViewModels
             }
 
             var response = await TemporaryVariables.GetStep();
-            if (Documents.Files.Any())
+            if (Documents.Any())
             {
                 if (response.Step == Step.ExamHasStartedDocumentDisplayed)
                 {

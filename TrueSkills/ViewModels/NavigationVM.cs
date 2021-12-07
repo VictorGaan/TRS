@@ -128,9 +128,12 @@ namespace TrueSkills.ViewModels
                 new VmHeaderUC().Show();
                 return;
             }
-            if (Content.GetType() == typeof(DefaultHeaderUC))
+            if (Content!=null)
             {
-                return;
+                if (Content.GetType() == typeof(DefaultHeaderUC))
+                {
+                    return;
+                }
             }
             Content = new DefaultHeaderUC();
         }

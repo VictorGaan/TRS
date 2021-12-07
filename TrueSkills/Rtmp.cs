@@ -38,80 +38,88 @@ namespace TrueSkills
 
         public void RtmpScreen(string url)
         {
-            if (IsNetwork)
+            try
             {
-                var pushUrl = url;
-                if (pushUrl == null || pushUrl == string.Empty) return;
+                if (IsNetwork)
+                {
+                    var pushUrl = url;
+                    if (pushUrl == null || pushUrl == string.Empty) return;
 
-                var frameRate = 15;
-                var waitInterval = 1000 / frameRate;
+                    var frameRate = 15;
+                    var waitInterval = 1000 / frameRate;
 
 
-                var screenWidth = GetSystemMetrics(0);
-                var screenHeight = GetSystemMetrics(1);
+                    var screenWidth = GetSystemMetrics(0);
+                    var screenHeight = GetSystemMetrics(1);
 
-                var width = screenWidth;
-                var height = screenHeight;
+                    var width = screenWidth;
+                    var height = screenHeight;
 
-                var pusher = new Pusher();
-                pusher.StartPush(pushUrl, width, height, frameRate);
+                    var pusher = new Pusher();
+                    pusher.StartPush(pushUrl, width, height, frameRate);
 
-                var stopEvent = new ManualResetEvent(false);
-                screenThread = new Thread(() =>
-               {
-                   var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
-                   encoder.FrameEncoded += (sender, e) =>
-                   {
-                       if (IsNetwork)
-                       {
-                           var packet = e.Packet;
-                           pusher.PushPacket(packet);
-                       }
+                    var stopEvent = new ManualResetEvent(false);
+                    screenThread = new Thread(() =>
+                    {
+                        var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
+                        encoder.FrameEncoded += (sender, e) =>
+                        {
+                            if (IsNetwork)
+                            {
+                                var packet = e.Packet;
+                                pusher.PushPacket(packet);
+                            }
 
-                   };
-                   var screenDc = GetDC(IntPtr.Zero);
-                   var bitmap = new Bitmap(screenWidth, screenHeight);
-                   if (IsNetwork)
-                   {
-                       try
-                       {
-                           while (!stopEvent.WaitOne(1))
-                           {
-                               var start = Environment.TickCount;
-                               using (var graphic = Graphics.FromImage(bitmap))
-                               {
-                                   var imageDc = graphic.GetHdc();
-                                   BitBlt(imageDc, 0, 0, width, height, screenDc, 0, 0, 0x00CC0020);
-                               }
-                               encoder.AddImage(bitmap);
-                               var timeUsed = Environment.TickCount - start;
-                               var timeToWait = waitInterval - timeUsed;
-                               Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
-                           }
-                           encoder.Flush();
-                           GC.Collect();
-                           GC.WaitForPendingFinalizers();
-                           GC.Collect();
-                       }
-                       finally
-                       {
-                           encoder.Dispose();
-                           bitmap.Dispose();
-                           ReleaseDC(IntPtr.Zero, screenDc);
-                           TemporaryVariables.lostRtmpScreen = true;
-                           stopEvent.Set();
+                        };
+                        var screenDc = GetDC(IntPtr.Zero);
+                        var bitmap = new Bitmap(screenWidth, screenHeight);
+                        if (IsNetwork)
+                        {
+                            try
+                            {
+                                while (!stopEvent.WaitOne(1))
+                                {
+                                    var start = Environment.TickCount;
+                                    using (var graphic = Graphics.FromImage(bitmap))
+                                    {
+                                        var imageDc = graphic.GetHdc();
+                                        BitBlt(imageDc, 0, 0, width, height, screenDc, 0, 0, 0x00CC0020);
+                                    }
+                                    encoder.AddImage(bitmap);
+                                    var timeUsed = Environment.TickCount - start;
+                                    var timeToWait = waitInterval - timeUsed;
+                                    Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
+                                }
+                                encoder.Flush();
+                                GC.Collect();
+                                GC.WaitForPendingFinalizers();
+                                GC.Collect();
+                            }
+                            finally
+                            {
+                                encoder.Dispose();
+                                bitmap.Dispose();
+                                ReleaseDC(IntPtr.Zero, screenDc);
+                                TemporaryVariables.lostRtmpScreen = true;
+                                stopEvent.Set();
 
-                           screenThread.Join();
-                           pusher.StopPush();
-                           pusher.Dispose();
-                           GC.Collect();
-                           GC.WaitForPendingFinalizers();
-                           GC.Collect();
-                       }
-                   }
-               });
-                screenThread.Start();
+                                screenThread.Join();
+                                pusher.StopPush();
+                                pusher.Dispose();
+                                GC.Collect();
+                                GC.WaitForPendingFinalizers();
+                                GC.Collect();
+                            }
+                        }
+                    });
+                    screenThread.Start();
+                }
             }
+            catch (Exception)
+            {
+                return;
+            }
+            
         }
 
         static Thread cameraThread = new Thread(() => { });
@@ -119,72 +127,80 @@ namespace TrueSkills
 
         public void RtmpCamera(string url)
         {
-            if (IsNetwork)
+            try
             {
-                var pushUrl = url;
-                if (pushUrl == null || pushUrl == string.Empty) return;
-
-                var frameRate = 15;
-                var waitInterval = 1000 / frameRate;
-
-
-                var screenWidth = GetSystemMetrics(0);
-                var screenHeight = GetSystemMetrics(1);
-
-                var width = screenWidth;
-                var height = screenHeight;
-
-                var pusher = new Pusher();
-                pusher.StartPush(pushUrl, width, height, frameRate);
-
-                var stopEvent = new ManualResetEvent(false);
-                cameraThread = new Thread(() =>
+                if (IsNetwork)
                 {
-                    var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
-                    encoder.FrameEncoded += (sender, e) =>
-                    {
-                        if (App.IsNetwork)
-                        {
-                            var packet = e.Packet;
-                            pusher.PushPacket(packet);
-                        }
-                    };
-                    var bitmap = TemporaryVariables.videoFrame;
-                    if (IsNetwork)
-                    {
-                        try
-                        {
-                            while (!stopEvent.WaitOne(1))
-                            {
-                                var start = Environment.TickCount;
-                                encoder.AddImage(bitmap);
-                                var timeUsed = Environment.TickCount - start;
-                                var timeToWait = waitInterval - timeUsed;
-                                Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
-                            }
-                            encoder.Flush();
-                            GC.Collect();
-                            GC.WaitForPendingFinalizers();
-                            GC.Collect();
-                        }
-                        finally
-                        {
-                            encoder.Dispose();
-                            bitmap.Dispose();
-                            ReleaseDC(IntPtr.Zero, IntPtr.Zero);
-                            TemporaryVariables.lostRtmpCamera = true;
+                    var pushUrl = url;
+                    if (pushUrl == null || pushUrl == string.Empty) return;
 
-                            stopEvent.Set();
-                            cameraThread.Join();
-                            pusher.StopPush();
-                            pusher.Dispose();
-                            GC.Collect();
-                            GC.WaitForPendingFinalizers();
-                            GC.Collect();
+                    var frameRate = 15;
+                    var waitInterval = 1000 / frameRate;
+
+
+                    var screenWidth = GetSystemMetrics(0);
+                    var screenHeight = GetSystemMetrics(1);
+
+                    var width = screenWidth;
+                    var height = screenHeight;
+
+                    var pusher = new Pusher();
+                    pusher.StartPush(pushUrl, width, height, frameRate);
+
+                    var stopEvent = new ManualResetEvent(false);
+                    cameraThread = new Thread(() =>
+                    {
+                        var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
+                        encoder.FrameEncoded += (sender, e) =>
+                        {
+                            if (App.IsNetwork)
+                            {
+                                var packet = e.Packet;
+                                pusher.PushPacket(packet);
+                            }
+                        };
+                        var bitmap = TemporaryVariables.videoFrame;
+                        if (IsNetwork)
+                        {
+                            try
+                            {
+                                while (!stopEvent.WaitOne(1))
+                                {
+                                    var start = Environment.TickCount;
+                                    encoder.AddImage(bitmap);
+                                    var timeUsed = Environment.TickCount - start;
+                                    var timeToWait = waitInterval - timeUsed;
+                                    Thread.Sleep(timeToWait < 0 ? 0 : timeToWait);
+                                }
+                                encoder.Flush();
+                                GC.Collect();
+                                GC.WaitForPendingFinalizers();
+                                GC.Collect();
+                            }
+                            finally
+                            {
+                                encoder.Dispose();
+                                bitmap.Dispose();
+                                ReleaseDC(IntPtr.Zero, IntPtr.Zero);
+                                TemporaryVariables.lostRtmpCamera = true;
+
+                                stopEvent.Set();
+                                cameraThread.Join();
+                                pusher.StopPush();
+                                pusher.Dispose();
+                                GC.Collect();
+                                GC.WaitForPendingFinalizers();
+                                GC.Collect();
+                            }
                         }
-                    }
-                });
-                cameraThread.Start();
+                    });
+                    cameraThread.Start();
+                }
+            }
+            catch (Exception)
+            {
+
+                return;
             }
         }
     }

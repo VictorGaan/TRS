@@ -39,7 +39,7 @@ namespace TrueSkills.ViewModels
         private async Task Navigate()
         {
             var response = await TemporaryVariables.GetStep();
-            if (DeviceCheckModel.Documents.Files.Any())
+            if (DeviceCheckModel.Documents.Any())
             {
                 if (response.Step == Step.ExamHasStartedDocumentDisplayed)
                 {

@@ -31,16 +31,17 @@
     <PackageReference Include="AudioSwitcher.AudioApi.CoreAudio" Version="4.0.0-alpha5" />
     <PackageReference Include="cef.redist.x64" Version="95.7.14" />
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="95.7.141" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.3" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="NAudio" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="ReactiveUI" Version="16.2.6" />
+    <PackageReference Include="ReactiveUI" Version="16.4.1" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="15.1.1" />
-    <PackageReference Include="ReactiveUI.WPF" Version="16.2.6" />
-    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="ReactiveUI.WPF" Version="16.4.1" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.Runtime.WindowsRuntime" Version="4.7.0" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.0" />
     <PackageReference Include="WindowsProgressRing" Version="1.0.0" />
   </ItemGroup>
 
@@ -86,6 +87,18 @@
     <Page Update="Languages\Language.ru-RU.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="chromiumembeddedframework.runtime.win-arm64" Version="96.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="chromiumembeddedframework.runtime.win-x64" Version="96.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="chromiumembeddedframework.runtime.win-x86" Version="96.0.14" />
   </ItemGroup>
 
 </Project>

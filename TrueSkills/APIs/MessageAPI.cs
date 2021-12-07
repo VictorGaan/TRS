@@ -10,7 +10,6 @@ namespace TrueSkills.APIs
         public class Rootobject : ReactiveObject
         {
             private ObservableCollection<Message> _messages;
-            [JsonProperty("messages")]
             public ObservableCollection<Message> Messages
             {
                 get => _messages;

@@ -29,7 +29,7 @@ namespace TrueSkills
         public static Frame frame;
         public static ChromiumWebBrowser webView;
         public static TimeSpan? time;
-        public static RoomAPI.Rootobject s_rooms;
+        public static RoomAPI.Rooms s_rooms;
         public static StreamAPI s_stream;
         private static int s_countExpert;
         private static int s_countSupport;
@@ -103,11 +103,11 @@ namespace TrueSkills
             {
                 if (room == Room.Expert)
                 {
-                    url = Url.s_chatUrl + $"/{rooms.Rooms.Expert}";
+                    url = Url.s_chatUrl + $"/{rooms.Expert}";
                 }
                 else if (room == Room.Support)
                 {
-                    url = Url.s_chatUrl + $"/{rooms.Rooms.Support}";
+                    url = Url.s_chatUrl + $"/{rooms.Support}";
                 }
                 if (operation == Operation.Get)
                 {
@@ -268,18 +268,22 @@ namespace TrueSkills
                 }
             }
         }
-        public static async Task<RoomAPI.Rootobject> GetRoomsAsync()
+        public static async Task<RoomAPI.Rooms> GetRoomsAsync()
         {
             if (currentParticipent == null)
                 return null;
             if (s_rooms == null)
-                s_rooms = await SupportingMethods.GetWebRequest<RoomAPI.Rootobject>(Url.s_chatUrl, true);
+                s_rooms = await SupportingMethods.GetWebRequest<RoomAPI.Rooms>(Url.s_chatUrl, true);
             return s_rooms;
         }
 
         public static void ClearTemp()
         {
             var directory = Path.GetTempPath() + "TrueSkills";
+            if (Directory.Exists(directory + "\\Tasks"))
+            {
+                Directory.Delete(directory, true);
+            }
             if (Directory.Exists(directory))
             {
                 var files = Directory.GetFiles(directory);
@@ -290,10 +294,34 @@ namespace TrueSkills
             }
         }
 
+        private static void KillProcessAndChildrens(int pid)
+        {
+            ManagementObjectSearcher processSearcher = new ManagementObjectSearcher("Select * From Win32_Process Where ParentProcessID=" + pid);
+            ManagementObjectCollection processCollection = processSearcher.Get();
+
+            if (processCollection != null)
+            {
+                foreach (ManagementObject mo in processCollection)
+                {
+                    KillProcessAndChildrens(Convert.ToInt32(mo["ProcessID"]));
+                }
+            }
+
+            try
+            {
+                Process proc = Process.GetProcessById(pid);
+                if (!proc.HasExited) proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+
+            }
+        }
+
         public static void Exit()
         {
             Locker.Unlock();
-            Process.GetCurrentProcess().Kill();
+            KillProcessAndChildrens(Process.GetCurrentProcess().Id);
         }
         public static string englishName;
         public static ResourceDictionary CurrentResource;
@@ -324,7 +352,7 @@ namespace TrueSkills
                 {
                     WorkingDirectory = Environment.CurrentDirectory,
                     FileName = "dotnet",
-                    Arguments = $"TrueSkills.dll {TemporaryVariables.Language.Name}",
+                    Arguments = $"TrueSkills.dll {Language.Name}",
                     Verb = "runas",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -375,6 +403,11 @@ namespace TrueSkills
             {
                 new MessageBoxWindow(ex.Message, GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
             }
+        }
+
+        public static void ShowException(Exception ex)
+        {
+            new MessageBoxWindow(ex.Message, GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
         }
 
         public static CultureInfo Language

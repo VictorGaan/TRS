@@ -18,7 +18,7 @@ namespace TrueSkills.Models
         private bool _isEnabled;
         private List<Pdf> _pdfs;
         private Pdf _currentPdf;
-        private Rootobject _rootobject;
+        private List<DocumentAPI.File> _rootobject;
         public bool IsChecked
         {
             get => _isChecked;
@@ -42,7 +42,7 @@ namespace TrueSkills.Models
             get => _currentPdf;
             set => this.RaiseAndSetIfChanged(ref _currentPdf, value);
         }
-        public Rootobject Rootobject
+        public List<DocumentAPI.File> Rootobject
         {
             get => _rootobject;
             set => this.RaiseAndSetIfChanged(ref _rootobject, value);
@@ -86,8 +86,8 @@ namespace TrueSkills.Models
         {
             if (App.IsNetwork)
             {
-                Rootobject = await SupportingMethods.GetWebRequest<Rootobject>(Url.s_documentUrl, true);
-                if (Rootobject.Files.Any())
+                Rootobject = await SupportingMethods.GetWebRequest<List<DocumentAPI.File>>(Url.s_documentUrl, true);
+                if (Rootobject.Any())
                 {
                     await GetFileAsync();
                 }
@@ -98,11 +98,11 @@ namespace TrueSkills.Models
             if (App.IsNetwork)
             {
                 TemporaryVariables.ClearTemp();
-                foreach (var item in Rootobject.Files)
+                foreach (var item in Rootobject)
                 {
                     try
                     {
-                        SupportingMethods.GetFileWebRequest(item.Url, Url.s_documentUrl, true);
+                        SupportingMethods.GetFileWebRequest(item.Url, Url.s_documentUrl, true, false);
                         Pdfs.Add(new Pdf() { Address = Path.GetTempPath() + $"TrueSkills\\{item.Url}.pdf", Id = item.Id });
                     }
                     catch (CodeException ex) { TemporaryVariables.ShowException(ex); }

@@ -36,7 +36,7 @@ namespace TrueSkills.Models
         private VideoCaptureDevice _videoSource;
         private BitmapImage _videoSourceImage;
         private bool _isNotFitDocument;
-        private Rootobject _documents;
+        private List<DocumentAPI.File> _documents;
         private ObservableCollection<WaveInCapabilities> _soundSource;
         private WaveInCapabilities _selectedMicrophone;
         private FilterInfo _selectedWebcam;
@@ -124,7 +124,7 @@ namespace TrueSkills.Models
             set => this.RaiseAndSetIfChanged(ref _isNotFitDocument, value);
         }
         public Task Initialization { get; set; }
-        public Rootobject Documents
+        public List<DocumentAPI.File> Documents
         {
             get => _documents;
             set => this.RaiseAndSetIfChanged(ref _documents, value);
@@ -158,7 +158,7 @@ namespace TrueSkills.Models
             {
                 try
                 {
-                    Documents = await SupportingMethods.GetWebRequest<Rootobject>(Url.s_documentUrl, true);
+                    Documents = await SupportingMethods.GetWebRequest<List<DocumentAPI.File>>(Url.s_documentUrl, true);
                 }
                 catch (CodeException ex)
                 {

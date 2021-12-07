@@ -4,12 +4,6 @@ namespace TrueSkills.APIs
 {
     public class RoomAPI
     {
-        public class Rootobject
-        {
-            [JsonProperty("rooms")]
-            public Rooms Rooms { get; set; }
-        }
-
         public class Rooms
         {
             [JsonProperty("expert")]

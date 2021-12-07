@@ -31,10 +31,10 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="1" Margin="5 0 5 -10" FontSize="24" Name="TbModule" FontWeight="Bold" Style="{StaticResource someText}"></TextBlock>
-            <TextBlock Name="TbDays" Margin="5 0 5 0" Grid.Column="1" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Days}"></TextBlock>
-            <TextBlock Name="TbHours" Margin="5 0 5 0" Grid.Column="2" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Hours}"></TextBlock>
-            <TextBlock Name="TbMinutes" Margin="5 0 5 0" Grid.Column="3" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Minutes}"></TextBlock>
-            <TextBlock Name="TbSeconds" Margin="5 0 5 0" Grid.Column="4" FontSize="15" Style="{DynamicResource someText}" Text="{DynamicResource df_Seconds}"></TextBlock>
+            <TextBlock Name="TbDays" Margin="5 0 5 0" Grid.Column="1" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Days}"></TextBlock>
+            <TextBlock Name="TbHours" Margin="5 0 5 0" Grid.Column="2" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Hours}"></TextBlock>
+            <TextBlock Name="TbMinutes" Margin="5 0 5 0" Grid.Column="3" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Minutes}"></TextBlock>
+            <TextBlock Name="TbSeconds" Margin="5 0 5 0" Grid.Column="4" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Seconds}"></TextBlock>
             <TextBlock Margin="0 0 15 -10" Grid.Row="1" Style="{DynamicResource someTime}" Grid.Column="1" Name="TbTime" Grid.ColumnSpan="4">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0}:{1}:{2}:{3}">

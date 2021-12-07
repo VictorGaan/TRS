@@ -25,7 +25,6 @@ namespace TrueSkills
 
         private static bool IsLocked;
 
-
         private static void LockControlPanel()
         {
             RegistryKey reg;

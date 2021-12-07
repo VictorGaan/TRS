@@ -66,6 +66,8 @@ namespace TrueSkills.ViewModels
         }
         public void Reload()
         {
+            TemporaryVariables.webView.JsDialogHandler = new JsDialogHandler(this);
+            TemporaryVariables.webView.ExecuteScriptAsyncWhenPageLoaded("document.querySelector('body').style.overflow='hidden'");
             TemporaryVariables.webView.Load(AddressVm);
         }
 

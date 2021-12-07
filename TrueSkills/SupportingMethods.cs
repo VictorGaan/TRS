@@ -5,9 +5,11 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -100,7 +102,8 @@ namespace TrueSkills
             {
                 throw new CodeException(tuple.response);
             }
-            return response.GetValueFromJson<V>();
+            var obj = response.GetValueFromJson<V>();
+            return obj;
         }
         /// <summary>
         /// POST Web Request
@@ -167,11 +170,12 @@ namespace TrueSkills
             {
                 throw new CodeException(tuple.response);
             }
-            return response.GetValueFromJson<T>();
+            var obj = response.GetValueFromJson<T>();
+            return obj;
         }
 
 
-        public static void GetFileWebRequest(string id, string url, bool isToken = false)
+        public static void GetFileWebRequest(string id, string url, bool isToken = false, bool isTask = true)
         {
             using (WebClient client = new WebClient())
             {
@@ -181,15 +185,41 @@ namespace TrueSkills
                 }
                 client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
                 Uri uri = new Uri(url + $"\\{id}");
+
                 var directory = $"{Path.GetTempPath()}TrueSkills";
-                if (!Directory.Exists(directory))
+                if (isTask)
                 {
-                    Directory.CreateDirectory(directory);
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                        Directory.CreateDirectory(directory + "\\Tasks");
+                    }
+                    else
+                    {
+                        if (!Directory.Exists(directory + "\\Tasks"))
+                        {
+                            Directory.CreateDirectory(directory + "\\Tasks");
+                        }
+                    }
                 }
-                client.DownloadFileAsync(uri, $"{directory}\\{id}.pdf");
+                else
+                {
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+                }
+                if (isTask)
+                {
+                    client.DownloadFileAsync(uri, $"{directory}\\Tasks\\{id}.pdf");
+                }
+                else
+                {
+                    client.DownloadFileAsync(uri, $"{directory}\\{id}.pdf");
+
+                }
             }
         }
-
         //Validation Methods
         private static bool IsBadHttpStatus(WebResponse webResponse)
         {

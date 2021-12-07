@@ -40,12 +40,13 @@ namespace TrueSkills.Models
                 var url = await TemporaryVariables.GetUrlAsync(room, Operation.Get);
                 try
                 {
-                    var response = await SupportingMethods.PostWebRequest<Rootobject>(url, true);
-                    Messages = response.Messages;
+                    var serializeObject = new { message = 0 };
+                    var response = await SupportingMethods.PostWebRequest<object, ObservableCollection<Message>>(url, serializeObject, true);
+                    Messages = response;
                     await Task.Delay(5000);
                     await GetMessagesAsync(room);
                 }
-                catch (CodeException ex)
+                catch (Exception ex)
                 {
                     TemporaryVariables.ShowException(ex);
                 }
@@ -62,7 +63,7 @@ namespace TrueSkills.Models
                 {
                     await SupportingMethods.PostWebRequest(url, request, true);
                 }
-                catch (CodeException ex)
+                catch (Exception ex)
                 {
                     TemporaryVariables.ShowException(ex);
                 }

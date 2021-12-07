@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Threading;
 using TrueSkills.ViewModels;
 
 namespace TrueSkills.Views
@@ -24,13 +25,14 @@ namespace TrueSkills.Views
             InitializeComponent();
             TemporaryVariables.frame = MainFrame;
             DataContext = new NavigationVM();
-            CheckMonitors();
-            ProcessModule objCurrentModule = Process.GetCurrentProcess().MainModule;
-            objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
-            ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
-            Locker.Lock();
-            this.Closed += (o, e) => { UnhookWindowsHookEx(ptrHook); Locker.Unlock(); };
+            //CheckMonitors();
+            //ProcessModule objCurrentModule = Process.GetCurrentProcess().MainModule;
+            //objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
+            //ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
+            //Locker.Lock();
+            //this.Closed += (o, e) => { UnhookWindowsHookEx(ptrHook); Locker.Unlock(); };
         }
+
         private void CheckMonitors()
         {
             var screen = Screen.FromHandle(new WindowInteropHelper(this).Handle);
@@ -107,11 +109,6 @@ namespace TrueSkills.Views
                 }
             }
             return CallNextHookEx(ptrHook, nCode, wp, lp);
-        }
-
-        bool HasAltModifier(int flags)
-        {
-            return (flags & 0x20) == 0x20;
         }
         #endregion
     }

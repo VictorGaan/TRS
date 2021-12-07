@@ -16,26 +16,29 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid Name="LinesGrid" Visibility="Visible" Panel.ZIndex="2" Margin="0 0 20 0">
+        <!--<Grid Name="LinesGrid" Panel.ZIndex="2" Margin="0 0 20 0">
             <Rectangle>
                 <Rectangle.Fill>
                     <DrawingBrush TileMode="Tile"
-              Viewport="0,0,30,30" ViewportUnits="Absolute"
+              Viewport="0,0,140,140" ViewportUnits="Absolute"
               Viewbox="0,0,30,30" ViewboxUnits="Absolute">
+                        <DrawingBrush.Transform>
+                            <RotateTransform Angle="45"/>
+                        </DrawingBrush.Transform>
                         <DrawingBrush.Drawing>
                             <GeometryDrawing>
                                 <GeometryDrawing.Pen>
-                                    <Pen Brush="White" Thickness="15"/>
+                                    <Pen Brush="White" Thickness="27"/>
                                 </GeometryDrawing.Pen>
                                 <GeometryDrawing.Geometry>
-                                    <Geometry>M0,0 L30,30 M15,-15 L45,15 M-15,15 L15,45</Geometry>
+                                    <LineGeometry StartPoint="0,15" EndPoint="30,15"/>
                                 </GeometryDrawing.Geometry>
                             </GeometryDrawing>
                         </DrawingBrush.Drawing>
                     </DrawingBrush>
                 </Rectangle.Fill>
             </Rectangle>
-        </Grid>
+        </Grid>-->
         <local:PdfViewer x:Name="PdfViewer" Panel.ZIndex="1" PdfPath="{Binding TaskModel.CurrentPdf.Address,UpdateSourceTrigger=PropertyChanged}"></local:PdfViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Visibility="{Binding TaskModel.VisibilityListBox}">
             <Button Style="{StaticResource navButton}" Content="&lt;" Command="{Binding NavCommandDown}"></Button>

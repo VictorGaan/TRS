@@ -21,27 +21,28 @@ namespace TrueSkills.Views
         {
             InitializeComponent();
             DataContext = new DocumentsVM();
-            DispatcherTimer timer = new DispatcherTimer();
-            var ghz = TemporaryVariables.RefreshFrequency();
-            timer.Interval = TimeSpan.FromSeconds(1 / ghz);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            //DispatcherTimer timer = new DispatcherTimer();
+            //var ghz = TemporaryVariables.RefreshFrequency();
+            //timer.Interval = TimeSpan.FromSeconds(1 / ghz);
+            //timer.Tick += Timer_Tick;
+            //timer.Start();
         }
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            if ((DataContext as DocumentsVM).DocumentModel.Pdfs.Any())
-            {
-                if (LinesGrid.Visibility == Visibility.Collapsed)
-                {
-                    LinesGrid.Visibility = Visibility.Visible;
-                    PdfViewer.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    LinesGrid.Visibility = Visibility.Collapsed;
-                    PdfViewer.Visibility = Visibility.Visible;
-                }
-            }
-        }
+
+        //private void Timer_Tick(object sender, EventArgs e)
+        //{
+        //    if ((DataContext as DocumentsVM).DocumentModel.Pdfs.Any())
+        //    {
+        //        if (System.Windows.Controls.Panel.GetZIndex(LinesGrid) == 2)
+        //        {
+        //            System.Windows.Controls.Panel.SetZIndex(LinesGrid, 1);
+        //            System.Windows.Controls.Panel.SetZIndex(PdfViewer, 2);
+        //        }
+        //        else
+        //        {
+        //            System.Windows.Controls.Panel.SetZIndex(LinesGrid, 2);
+        //            System.Windows.Controls.Panel.SetZIndex(PdfViewer, 1);
+        //        }
+        //    }
+        //}
     }
 }

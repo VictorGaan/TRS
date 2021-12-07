@@ -17,7 +17,7 @@ namespace TrueSkills.Models
         private ObservableCollection<Pdf> _pdfs;
         private Visibility _visibilityListBox;
         private Pdf _currentPdf;
-        private TaskAPI.Rootobject _tasks;
+        private List<TaskAPI.File> _tasks;
         private ObservableCollection<int> _navNumbers;
         private int _selectedIndex = 0;
         public Visibility VisibilityListBox
@@ -35,7 +35,7 @@ namespace TrueSkills.Models
             get => _navNumbers;
             set => this.RaiseAndSetIfChanged(ref _navNumbers, value);
         }
-        public TaskAPI.Rootobject Tasks
+        public List<TaskAPI.File> Tasks
         {
             get => _tasks;
             set => this.RaiseAndSetIfChanged(ref _tasks, value);
@@ -66,9 +66,9 @@ namespace TrueSkills.Models
             {
                 try
                 {
-                    Tasks = await SupportingMethods.GetWebRequest<TaskAPI.Rootobject>(Url.s_taskUrl, true);
+                    Tasks = await SupportingMethods.GetWebRequest<List<TaskAPI.File>>(Url.s_taskUrl, true);
                     await GetTasksAsync();
-                    if (Tasks.Files.Count() > 1)
+                    if (Tasks.Count() > 1)
                     {
                         SetNumbers();
                     }
@@ -79,7 +79,7 @@ namespace TrueSkills.Models
 
         private void SetNumbers()
         {
-            for (int i = 1; i <= Tasks.Files.Count(); i++)
+            for (int i = 1; i <= Tasks.Count(); i++)
             {
                 NavNumbers.Add(i);
             }
@@ -112,12 +112,12 @@ namespace TrueSkills.Models
             if (App.IsNetwork)
             {
                 TemporaryVariables.ClearTemp();
-                foreach (var item in Tasks.Files)
+                foreach (var item in Tasks)
                 {
                     try
                     {
                         SupportingMethods.GetFileWebRequest(item.Url, Url.s_documentUrl, true);
-                        Pdfs.Add(new Pdf() { Address = Path.GetTempPath() + $"TrueSkills\\{item.Url}.pdf", Id = item.Url });
+                        Pdfs.Add(new Pdf() { Address = Path.GetTempPath() + $"TrueSkills\\Tasks\\{item.Url}.pdf", Id = item.Url });
                     }
                     catch (CodeException ex) { TemporaryVariables.ShowException(ex); }
 
