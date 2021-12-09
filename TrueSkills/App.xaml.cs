@@ -14,6 +14,7 @@ namespace TrueSkills
     {
 
         public static bool IsNetwork { get; set; }
+        public static bool IsNetworkServer { get; set; }
         public App()
         {
             ServerNetwork serverNetwork = new ServerNetwork();
@@ -25,6 +26,7 @@ namespace TrueSkills
 
         private void ServerNetwork_ServerNetworkAvailabilityChanged(bool isWork)
         {
+            IsNetworkServer = isWork;
             if (!isWork)
             {
                 Current.Dispatcher.Invoke(() =>

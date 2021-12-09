@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.ServiceProcess;
 using System.Windows.Forms;
 
 namespace TrueSkills
@@ -12,6 +13,7 @@ namespace TrueSkills
         {
             LockControlPanel();
             LockTaskBar();
+            LockPushNotification();
         }
 
         public static void Unlock()
@@ -20,10 +22,45 @@ namespace TrueSkills
             {
                 UnlockControlPanel();
                 UnlockTaskBar();
+                UnlockPushNotification();
             }
         }
 
         private static bool IsLocked;
+
+
+        private static void LockPushNotification()
+        {
+            ServiceController[] services = ServiceController.GetServices();
+            foreach (ServiceController service in services)
+            {
+                if (service.ServiceName.Contains("WpnUserService"))
+                {
+                    if (service.Status==ServiceControllerStatus.Running)
+                    {
+                        service.Stop();
+                    }
+                }
+            }
+            IsLocked = true;
+        }
+
+
+        private static void UnlockPushNotification()
+        {
+            ServiceController[] services = ServiceController.GetServices();
+            foreach (ServiceController service in services)
+            {
+                if (service.ServiceName.Contains("WpnUserService"))
+                {
+                    if (service.Status == ServiceControllerStatus.Stopped)
+                    {
+                        service.Start();
+                    }
+                }
+            }
+            IsLocked=false;
+        }
 
         private static void LockControlPanel()
         {

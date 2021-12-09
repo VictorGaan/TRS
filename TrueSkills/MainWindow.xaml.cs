@@ -15,8 +15,7 @@ namespace TrueSkills
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowVM();
-            Locker.Lock();
+            DataContext = new MainWindowVM(); 
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

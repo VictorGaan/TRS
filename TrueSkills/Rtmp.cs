@@ -12,17 +12,6 @@ namespace TrueSkills
 {
     public class Rtmp
     {
-        private bool IsNetwork { get; set; }
-        public Rtmp()
-        {
-            IsNetwork = true;
-            NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
-        }
-
-        private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
-        {
-            IsNetwork = e.IsAvailable;
-        }
 
         [DllImport("user32.dll")]
         public static extern int GetSystemMetrics(int index);
@@ -40,7 +29,7 @@ namespace TrueSkills
         {
             try
             {
-                if (IsNetwork)
+                if (App.IsNetwork)
                 {
                     var pushUrl = url;
                     if (pushUrl == null || pushUrl == string.Empty) return;
@@ -64,7 +53,7 @@ namespace TrueSkills
                         var encoder = new DotNetPusher.Encoders.Encoder(width, height, frameRate, 1024 * 800);
                         encoder.FrameEncoded += (sender, e) =>
                         {
-                            if (IsNetwork)
+                            if (App.IsNetwork)
                             {
                                 var packet = e.Packet;
                                 pusher.PushPacket(packet);
@@ -73,7 +62,7 @@ namespace TrueSkills
                         };
                         var screenDc = GetDC(IntPtr.Zero);
                         var bitmap = new Bitmap(screenWidth, screenHeight);
-                        if (IsNetwork)
+                        if (App.IsNetwork)
                         {
                             try
                             {
@@ -129,7 +118,7 @@ namespace TrueSkills
         {
             try
             {
-                if (IsNetwork)
+                if (App.IsNetwork)
                 {
                     var pushUrl = url;
                     if (pushUrl == null || pushUrl == string.Empty) return;
@@ -160,7 +149,7 @@ namespace TrueSkills
                             }
                         };
                         var bitmap = TemporaryVariables.videoFrame;
-                        if (IsNetwork)
+                        if (App.IsNetwork)
                         {
                             try
                             {

@@ -25,13 +25,15 @@ namespace TrueSkills.Views
             InitializeComponent();
             TemporaryVariables.frame = MainFrame;
             DataContext = new NavigationVM();
-            //CheckMonitors();
-            //ProcessModule objCurrentModule = Process.GetCurrentProcess().MainModule;
-            //objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
-            //ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
-            //Locker.Lock();
-            //this.Closed += (o, e) => { UnhookWindowsHookEx(ptrHook); Locker.Unlock(); };
+            CheckMonitors();
+            ProcessModule objCurrentModule = Process.GetCurrentProcess().MainModule;
+            objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
+            ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
+            Locker.Lock();
+            this.Closed += (o, e) => { UnhookWindowsHookEx(ptrHook); Locker.Unlock(); };
         }
+
+
 
         private void CheckMonitors()
         {

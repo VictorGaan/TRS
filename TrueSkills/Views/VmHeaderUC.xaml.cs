@@ -24,6 +24,7 @@ namespace TrueSkills.Views
         private DispatcherTimer _timer;
         public VmHeaderUC()
         {
+            
             InitializeComponent();
             DateGrid.Visibility = Visibility.Collapsed;
             _timer = new DispatcherTimer()

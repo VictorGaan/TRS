@@ -117,16 +117,32 @@ namespace TrueSkills.ViewModels
             set => this.RaiseAndSetIfChanged(ref _content, value);
         }
 
+
+        private bool IsVmExists()
+        {
+            foreach (var window in App.Current.Windows)
+            {
+                if (window.GetType() == typeof(VmHeaderUC))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void ContentRendered()
         {
             Page page = TemporaryVariables.frame.Content as Page;
             TemporaryVariables.sources.Add(TemporaryVariables.frame.Content.ToString());
             if (page is VMPage)
             {
-                HeightContent = double.NaN;
-                Content = null;
-                new VmHeaderUC().Show();
-                return;
+                if (!IsVmExists())
+                {
+                    HeightContent = double.NaN;
+                    Content = null;
+                    new VmHeaderUC().Show();
+                    return;
+                }
             }
             if (Content!=null)
             {
