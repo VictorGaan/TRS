@@ -2,11 +2,13 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows;
 using TrueSkills.APIs;
 using TrueSkills.Enums;
 using TrueSkills.Exceptions;
+using TrueSkills.Interfaces;
 using TrueSkills.Views;
 
 namespace TrueSkills.Models
@@ -39,6 +41,7 @@ namespace TrueSkills.Models
             _exam = string.Empty;
         }
 
+
         public async Task LoginAsync(object sender)
         {
             if (App.IsNetwork)
@@ -51,12 +54,23 @@ namespace TrueSkills.Models
                     TemporaryVariables.currentParticipent = this;
                     await TemporaryVariables.GetStream();
                     var step = await TemporaryVariables.GetStep();
-                    if (step.Step != Step.ExamOver)
+                    if (step.Step == Step.ExamNotRun || step.Step == Step.ExamHasStartedModuleNotStarted)
+                    {
+                        BeforeExamWindow beforeExamWindow = new BeforeExamWindow(step);
+                        beforeExamWindow.Show();
+                        CloseThisWindow(sender);
+                        return;
+                    }
+                    if (step.Step == Step.ExamStartTaskDisplay || step.Step == Step.ExamHasStartedDocumentDisplayed
+                        || step.Step == Step.ExamStartModuleUnderway)
                     {
                         CloseOpenWindow(sender);
                         return;
                     }
-                    CloseWindow(sender);
+                    if (step.Step == Step.ExamOver)
+                    {
+                        CloseWindow(sender);
+                    }
                 }
                 catch (CodeException ex)
                 {
@@ -70,6 +84,7 @@ namespace TrueSkills.Models
         }
 
         public string Error => throw new NotImplementedException();
+
 
         public string this[string propertyName]
         {
@@ -94,7 +109,7 @@ namespace TrueSkills.Models
                             error = $"{TemporaryVariables.GetProperty("tm_NumberError")}";
                         }
 
-                        if (FullName.Where(x=>!IsBasicLetterFn(x)&&!IsBasicLetterFnRus(x)).Any())
+                        if (FullName.Where(x => !IsBasicLetterFn(x) && !IsBasicLetterFnRus(x)).Any())
                         {
                             error = $"{TemporaryVariables.GetProperty("tm_PunctuationError")}";
                         }
@@ -151,6 +166,10 @@ namespace TrueSkills.Models
         private bool IsBasicLetter(char c)
         {
             return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+        }
+        private void CloseThisWindow(object sender)
+        {
+            (sender as MainWindow).Close();
         }
 
         private void CloseWindow(object sender)

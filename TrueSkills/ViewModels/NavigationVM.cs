@@ -25,14 +25,13 @@ using TrueSkills.Views;
 
 namespace TrueSkills.ViewModels
 {
-    public class NavigationVM : ReactiveObject, IAsyncInitialization
+    public class NavigationVM : ReactiveObject,IAsyncInitialization
     {
         private Visibility _datePickerVisibility;
         private System.Windows.Controls.UserControl _content;
         private double _heightContent;
         private DispatcherTimer _timer;
         public ReactiveCommand<Unit, Unit> ContentRenderedCommand { get; }
-        public Task Initialization { get; set; }
 
         public Visibility DatePickerVisibility
         {
@@ -44,14 +43,16 @@ namespace TrueSkills.ViewModels
             get => _heightContent;
             set => this.RaiseAndSetIfChanged(ref _heightContent, value);
         }
+        public Task Initialization { get; set; }
+
         public Rtmp rtmp = new Rtmp();
         public NavigationVM()
         {
             HeightContent = double.NaN;
             DatePickerVisibility = Visibility.Visible;
+            Content = new DefaultHeaderUC();
             Initialization = InitializationAsync();
             NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
-            Content = new DefaultHeaderUC();
             _timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1)
@@ -68,6 +69,7 @@ namespace TrueSkills.ViewModels
                 new MessageBoxWindow(ex.Message, TemporaryVariables.GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
             }
         }
+
         private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
             if (e.IsAvailable)
@@ -75,6 +77,7 @@ namespace TrueSkills.ViewModels
                 Initialization = InitializationAsync();
             }
         }
+
         private async Task InitializationAsync()
         {
             if (App.IsNetwork)
@@ -83,6 +86,7 @@ namespace TrueSkills.ViewModels
                 await TemporaryVariables.SubscribeGetCountMessagesAsync();
             }
         }
+
 
         private void Timer_Tick(object sender, EventArgs e)
         {

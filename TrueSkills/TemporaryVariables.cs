@@ -198,37 +198,49 @@ namespace TrueSkills
                                 new MessageBoxWindow(ex.Message, GetProperty("a_Error"), MessageBoxWindow.MessageBoxButton.Ok);
                             }
                         }
-                        SearchBefore(response);
-                        if (response.Step == Step.ExamHasStartedDocumentDisplayed)
+                        if (response.Step != Step.ExamHasStartedModuleNotStarted && response.Step != Step.ExamNotRun)
                         {
-                            if (isAuthDevice && !IsSome("DocumentsPage"))
+                            if (!IsTypeExists(typeof(NavigationWindow)))
                             {
-                                frame.Navigate(new DocumentsPage());
+                                new NavigationWindow().Show();
+                            }
+
+                            SearchBefore(response);
+                            if (response.Step == Step.ExamHasStartedDocumentDisplayed)
+                            {
+                                if (isAuthDevice && !IsSome("DocumentsPage"))
+                                {
+                                    frame.Navigate(new DocumentsPage());
+                                }
+                            }
+                            else if (response.Step == Step.ExamStartTaskDisplay)
+                            {
+                                if (isAuthDevice && !IsSome("TaskPage"))
+                                {
+                                    frame.Navigate(new TaskPage());
+                                }
+                            }
+                            else if (response.Step == Step.ExamStartModuleUnderway)
+                            {
+                                if (isAuthDevice && !IsSome("VMPage"))
+                                {
+                                    frame.Navigate(new VMPage());
+                                }
+                            }
+                            else if (response.Step == Step.ExamOver)
+                            {
+                                new ExamEndWindow().Show();
+                                CloseAllWindows();
                             }
                         }
-                        else if (response.Step == Step.ExamStartTaskDisplay)
+                        else
                         {
-                            if (isAuthDevice && !IsSome("TaskPage"))
+                            if (!IsTypeExists(typeof(BeforeExamWindow)))
                             {
-                                frame.Navigate(new TaskPage());
+                                BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
+                                beforeExamWindow.ShowDialog();
                             }
-                        }
-                        else if (response.Step == Step.ExamStartModuleUnderway)
-                        {
-                            if (isAuthDevice && !IsSome("VMPage"))
-                            {
-                                frame.Navigate(new VMPage());
-                            }
-                        }
-                        else if (response.Step == Step.ExamHasStartedModuleNotStarted)
-                        {
-                            BeforeExamWindow beforeExamWindow = new BeforeExamWindow(response);
-                            beforeExamWindow.ShowDialog();
-                        }
-                        else if (response.Step == Step.ExamOver)
-                        {
-                            new ExamEndWindow().Show();
-                            CloseAllWindows();
+
                         }
                     }
                     catch (CodeException ex)
@@ -242,6 +254,19 @@ namespace TrueSkills
                 await Task.Delay(30000);
                 await SubscribeLoadStepAsync();
             }
+        }
+
+
+        private static bool IsTypeExists(Type type)
+        {
+            foreach (var window in App.Current.Windows)
+            {
+                if (window.GetType() == type)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static void CloseAllWindows()

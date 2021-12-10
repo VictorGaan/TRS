@@ -5,13 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrueSkills.Views"
         mc:Ignorable="d"
-       Title="{DynamicResource be_Title}" Height="275" Width="570" WindowStartupLocation="CenterScreen"  ResizeMode="NoResize" WindowStyle="None" FontFamily="Roboto">
+       Title="{DynamicResource be_Title}" Height="275" Width="600" WindowStartupLocation="CenterScreen"  ResizeMode="NoResize" WindowStyle="None" FontFamily="Roboto">
     <Grid Background="{StaticResource BackColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <local:DefaultHeaderUC VisibilityLogout="Collapsed" VisibilityStudent="Collapsed"></local:DefaultHeaderUC>
+        <Grid Background="{StaticResource HeaderBackColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Style="{DynamicResource tsTextBlock}">TS</TextBlock>
+            <TextBlock Style="{DynamicResource demoTextBlock}" Grid.Column="1" Text="{DynamicResource a_DemoExam}"></TextBlock>
+            <Grid Name="DateGrid" Background="{DynamicResource HeaderBackColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Visibility="{Binding VisibilityDate}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="1" Margin="5 0 5 -10" FontSize="24" Name="TbModule" FontWeight="Bold" Style="{StaticResource someText}"></TextBlock>
+                <TextBlock Name="TbDays" Margin="5 0 5 0" Grid.Column="1" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Days}"></TextBlock>
+                <TextBlock Name="TbHours" Margin="5 0 5 0" Grid.Column="2" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Hours}"></TextBlock>
+                <TextBlock Name="TbMinutes" Margin="5 0 5 0" Grid.Column="3" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Minutes}"></TextBlock>
+                <TextBlock Name="TbSeconds" Margin="5 0 5 0" Grid.Column="4" FontSize="14" Style="{DynamicResource someText}" Text="{DynamicResource df_Seconds}"></TextBlock>
+                <TextBlock Margin="0 0 15 -10" Grid.Row="1" Style="{DynamicResource someTime}" Grid.Column="1" Name="TbTime" Grid.ColumnSpan="4">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}:{1}:{2}:{3}">
+                            <Binding Path="Days"></Binding>
+                            <Binding Path="Hours"></Binding>
+                            <Binding Path="Minutes"></Binding>
+                            <Binding Path="Seconds"></Binding>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Grid>
+            <TextBlock Grid.Column="3" Margin="5" FontWeight="Bold" FontSize="15" Style="{DynamicResource someText}" Name="TbLanguage"></TextBlock>
+            <Image Cursor="Hand" Style="{DynamicResource defaultImage}" Source="/Assets/Agent.png" Grid.Column="5" Name="ImgAgent" MouseDown="ImgAgent_MouseDown"></Image>
+        </Grid>
         <TextBlock Style="{StaticResource headerSetting}" Name="TbExam" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
     </Grid>
 </Window>
